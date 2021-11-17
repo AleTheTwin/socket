@@ -17,7 +17,7 @@ class p2pServer {
         this.server = new webSocket.Server({port: P2P_PORT})
         console.log("Listening for p2p connections on port " + P2P_PORT)
         this.connectToPeers()
-        this.server.on('connection', (socket, req) => {
+        this.server.on('connection', (socket) => {
             this.connecctSocket(socket)
         })
     }
@@ -48,6 +48,7 @@ class p2pServer {
             emiter: socket.url,
             message: "Connection established"
         }
+        console.log("Sending message: " + JSON.stringify(message))
         socket.send(JSON.stringify(message))
     }
 
@@ -67,7 +68,6 @@ class p2pServer {
     }
 
     async connectToPeers() {
-        console.log('Looking for peers')
         const nodePortScanner = require('node-port-scanner')
 
         const { networkInterfaces } = require('os');
@@ -110,6 +110,7 @@ class p2pServer {
                 }) 
                 if(resultado.ports.open.includes(port)) {
                     var peer = "ws://" + resultado.host + ':' + wsPort
+                    console.log("Connecting with " + peer)
                     var socket = new webSocket(peer)
                     socket.on('open', () => {
                         this.connecctSocket(socket)
