@@ -33,7 +33,7 @@ class p2pServer {
         this.sockets.forEach(socket => {
             socket.send(message)
             console.log('Message sent')
-            socket.send('Hola, acabas de conectar conmigo')
+            socket.send(JSON.stringify({ data : 'Hola, acabas de conectar conmigo'}))
         })
         
     }
@@ -41,12 +41,13 @@ class p2pServer {
     connecctSocket(socket) {
         this.sockets.push(socket)
         console.log('[+] New socket connected')
-        this.messageHandler(socket)
+        // this.messageHandler(socket)
     }
 
     messageHandler(socket) {
         socket.on('message', message => {
-            console.log(message)
+            let mensaje = JSON.parse(message)
+            console.log(mensaje)
         })
     }
 
@@ -89,7 +90,7 @@ class p2pServer {
         .then(devices => {
             localDevices = devices
         })
-
+        var resultado
         localDevices.forEach(async device => {
             if(!(localAdresses.includes(device.ip))) {
                 await nodePortScanner(device.ip, [port])
