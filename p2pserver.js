@@ -105,7 +105,7 @@ class p2pServer {
                     var socket = new webSocket(peer)
                     socket.on('open', () => {
                         this.connecctSocket(socket)
-                        socket.send("Hola")
+                        socket.send(JSON.stringify({ data: 'Hola'}))
                     })
                 }
             }
