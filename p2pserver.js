@@ -24,18 +24,16 @@ class p2pServer {
 
     sendMessage(message) {
         // this.server.send(message)
-        this.sockets.forEach(socket => {
-            // socket.send(message)
-            console.log('Message sent')
-            socket.send(JSON.stringify({ message: message }))
-        })
+        // this.sockets.forEach(socket => {
+        //     // socket.send(message)
+        //     console.log('Message sent')
+        //     // socket.send(JSON.stringify({ message: message }))
+        // })
         
     }
 
     sendFile(file) {
-        // this.server.send(message)
         this.sockets.forEach(socket => {
-            // socket.send(message)
             console.log('File sent')
             socket.emit('file', file)
         })
