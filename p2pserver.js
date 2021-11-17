@@ -50,14 +50,9 @@ class p2pServer {
         this.sockets.push(socket)
         // console.log('[+] New socket connected from: ' + ip)
         this.messageHandler(socket)
-        let emiter
-        if(ip != undefined) {
-            emiter = ip
-        } else {
-            emiter = socket.url
-        }
+        
         let message = {
-            emiter: emiter,
+            emiter: ipLocal,
             message: "Connection established"
         }
         // console.log(socket.url)
