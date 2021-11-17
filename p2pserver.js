@@ -46,12 +46,17 @@ class p2pServer {
         this.sockets.push(socket)
         // console.log('[+] New socket connected from: ' + ip)
         this.messageHandler(socket)
+        let message = {
+            emiter: socket.url,
+            message: "Connection established"
+        }
+        socket.send(JSON.stringify(message))
     }
 
     messageHandler(socket) {
         socket.on('message', message => {
             let mensaje = JSON.parse(message)
-            console.log(mensaje.message)
+            console.log(mensaje)
         })
 
         socket.on('file', file => {
@@ -107,13 +112,9 @@ class p2pServer {
                 }) 
                 if(resultado.ports.open.includes(port)) {
                     var peer = "ws://" + resultado.host + ':' + wsPort
-                    // console.log(resultado.host)
-                    // hosts.push(result.host)
                     var socket = new webSocket(peer)
                     socket.on('open', () => {
                         this.connecctSocket(socket)
-                        socket.send(JSON.stringify({ message: "[" + localAdresses[0] + "] New connection." }))
-                        console.log({ message: "[" + device.ip + "] New connection." })
                     })
                 }
             }
