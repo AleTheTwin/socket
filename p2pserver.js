@@ -31,7 +31,7 @@ class p2pServer {
     sendMessage(message) {
         // this.server.send(message)
         this.sockets.forEach(socket => {
-            socket.send(message)
+            // socket.send(message)
             console.log('Message sent')
             socket.send(JSON.stringify({ data : 'Hola, acabas de conectar conmigo'}))
         })
