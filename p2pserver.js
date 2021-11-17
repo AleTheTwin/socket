@@ -106,7 +106,6 @@ class p2pServer {
                     resultado = result
                 }) 
                 if(resultado.ports.open.includes(port)) {
-                    console.log(resultado)
                     var peer = "ws://" + resultado.host + ':' + wsPort
                     // console.log(resultado.host)
                     // hosts.push(result.host)
