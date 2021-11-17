@@ -38,6 +38,16 @@ class p2pServer {
         
     }
 
+    sendMessage(file) {
+        // this.server.send(message)
+        this.sockets.forEach(socket => {
+            // socket.send(message)
+            console.log('File sent')
+            socket.emit('file', file)
+        })
+        
+    }
+
     connecctSocket(socket) {
         this.sockets.push(socket)
         console.log('[+] New socket connected')
@@ -48,6 +58,10 @@ class p2pServer {
         socket.on('message', message => {
             let mensaje = JSON.parse(message)
             console.log(mensaje)
+        })
+
+        socket.on('file', file => {
+            console.log("Recibiendo archivo")
         })
     }
 
