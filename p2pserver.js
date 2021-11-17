@@ -9,7 +9,7 @@ const ipFinal = 25
 // lookForPeers()
 
 
-let P2P_PORT = process.env.P2P_PORT || 5001
+let P2P_PORT = process.env.P2P_PORT || wsPort
 
 class p2pServer {
     constructor() {
@@ -99,7 +99,7 @@ class p2pServer {
                 }) 
                 if(resultado.ports.open.includes(port)  && resultado.host != "192.168.0.4") {
                     console.log(resultado)
-                    var peer = "ws://" + resultado.host + ':' + 5001
+                    var peer = "ws://" + resultado.host + ':' + wsPort
                     // console.log(resultado.host)
                     // hosts.push(result.host)
                     var socket = new webSocket(peer)
