@@ -1,13 +1,8 @@
 const webSocket = require('ws')
 
-const peers = process.env.PEERS ? process.env.PEERS.split(',') : []
+// const peers = process.env.PEERS ? process.env.PEERS.split(',') : []
 const port = 3000
 const wsPort = 5001
-const ipInitial = 1
-const ipFinal = 25
-
-// lookForPeers()
-
 
 let P2P_PORT = process.env.P2P_PORT || wsPort
 
@@ -23,10 +18,8 @@ class p2pServer {
         console.log("Listening for p2p connections on port " + P2P_PORT)
         this.connectToPeers()
         this.server.on('connection', (socket, req) => {
-            this.connecctSocket(socket, req.socket.remoteAddress)
-        })
-        this.server.on('message', message => {
-            console.log("Recivendo mensaje...")
+            this.connecctSocket(socket)
+            console.log('[' + req.socket.remoteAddress + '] New connection.')
         })
     }
 
@@ -35,7 +28,7 @@ class p2pServer {
         this.sockets.forEach(socket => {
             // socket.send(message)
             console.log('Message sent')
-            socket.send(JSON.stringify({ data : 'Hola, acabas de conectar conmigo'}))
+            socket.send(JSON.stringify({ message: message }))
         })
         
     }
@@ -50,9 +43,9 @@ class p2pServer {
         
     }
 
-    connecctSocket(socket, ip) {
+    connecctSocket(socket) {
         this.sockets.push(socket)
-        console.log('[+] New socket connected from: ' + ip)
+        // console.log('[+] New socket connected from: ' + ip)
         this.messageHandler(socket)
     }
 
@@ -78,7 +71,7 @@ class p2pServer {
         const { networkInterfaces } = require('os');
 
         const nets = networkInterfaces();
-        const results = Object.create(null); // Or just '{}', an empty object
+        const results = Object.create(null);
 
         for (const name of Object.keys(nets)) {
             for (const net of nets[name]) {
@@ -120,8 +113,8 @@ class p2pServer {
                     // hosts.push(result.host)
                     var socket = new webSocket(peer)
                     socket.on('open', () => {
-                        this.connecctSocket(socket, socket.remoteAddress)
-                        socket.send(JSON.stringify({ data: 'Hola'}))
+                        this.connecctSocket(socket)
+                        socket.send(JSON.stringify({ message: "[" + localAdresses[0] + "] New connection." }))
                     })
                 }
             }
