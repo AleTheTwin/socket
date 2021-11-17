@@ -38,7 +38,7 @@ class p2pServer {
         
     }
 
-    sendMessage(file) {
+    sendFile(file) {
         // this.server.send(message)
         this.sockets.forEach(socket => {
             // socket.send(message)
