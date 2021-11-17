@@ -13,7 +13,7 @@ app.listen(HTTP_PORT, function() {
 })
 
 app.get('/', function(req, res) {
-    p2pServer.sendFile("Hola")
+    p2pServer.sendMessage("Hola")
     res.send("sent")
 })
 

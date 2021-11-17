@@ -4,6 +4,8 @@ const webSocket = require('ws')
 const port = 3000
 const wsPort = 5001
 
+var ipLocal = []
+
 let P2P_PORT = process.env.P2P_PORT || wsPort
 
 class p2pServer {
@@ -17,18 +19,22 @@ class p2pServer {
         this.server = new webSocket.Server({port: P2P_PORT})
         console.log("Listening for p2p connections on port " + P2P_PORT)
         this.connectToPeers()
-        this.server.on('connection', (socket) => {
-            this.connecctSocket(socket)
+        this.server.on('connection', (socket, req) => {
+            this.connecctSocket(socket, req.socket.remoteAddress)
+            // console.log('connection from ' + socket.url)
         })
     }
 
     sendMessage(message) {
-        // this.server.send(message)
-        // this.sockets.forEach(socket => {
-        //     // socket.send(message)
-        //     console.log('Message sent')
-        //     // socket.send(JSON.stringify({ message: message }))
-        // })
+        this.sockets.forEach(socket => {
+            let mensaje = {
+                emiter: ipLocal,
+                message: message
+            }
+            socket.send(JSON.stringify(mensaje))
+            console.log('Message sent')
+            // socket.send(JSON.stringify({ message: message }))
+        })
         
     }
 
@@ -40,15 +46,21 @@ class p2pServer {
         
     }
 
-    connecctSocket(socket) {
+    connecctSocket(socket, ip) {
         this.sockets.push(socket)
         // console.log('[+] New socket connected from: ' + ip)
         this.messageHandler(socket)
+        let emiter
+        if(ip != undefined) {
+            emiter = ip
+        } else {
+            emiter = socket.url
+        }
         let message = {
-            emiter: socket.url,
+            emiter: emiter,
             message: "Connection established"
         }
-        console.log("Sending message: " + JSON.stringify(message))
+        // console.log(socket.url)
         socket.send(JSON.stringify(message))
     }
 
@@ -92,6 +104,8 @@ class p2pServer {
         for(const interfaceName of Object.keys(results)) {
             localAdresses.push(results[interfaceName][0])
         }
+
+        ipLocal = localAdresses
 
         const find = require('local-devices');
 
