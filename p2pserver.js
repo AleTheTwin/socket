@@ -41,7 +41,7 @@ class p2pServer {
     connecctSocket(socket) {
         this.sockets.push(socket)
         console.log('[+] New socket connected')
-        // this.messageHandler(socket)
+        this.messageHandler(socket)
     }
 
     messageHandler(socket) {
