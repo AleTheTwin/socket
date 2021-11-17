@@ -19,7 +19,6 @@ class p2pServer {
         this.connectToPeers()
         this.server.on('connection', (socket, req) => {
             this.connecctSocket(socket)
-            console.log('[' + req.socket.remoteAddress + '] New connection.')
         })
     }
 
@@ -115,6 +114,7 @@ class p2pServer {
                     socket.on('open', () => {
                         this.connecctSocket(socket)
                         socket.send(JSON.stringify({ message: "[" + localAdresses[0] + "] New connection." }))
+                        console.log({ message: "[" + device.ip + "] New connection." })
                     })
                 }
             }
