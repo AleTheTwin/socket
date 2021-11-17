@@ -22,7 +22,9 @@ class p2pServer {
         this.server = new webSocket.Server({port: P2P_PORT})
         console.log("Listening for p2p connections on port " + P2P_PORT)
         this.connectToPeers()
-        this.server.on('connection', socket => this.connecctSocket(socket))
+        this.server.on('connection', (socket, req) => {
+            this.connecctSocket(socket, req.socket.remoteAddress)
+        })
         this.server.on('message', message => {
             console.log("Recivendo mensaje...")
         })
@@ -48,9 +50,9 @@ class p2pServer {
         
     }
 
-    connecctSocket(socket) {
+    connecctSocket(socket, ip) {
         this.sockets.push(socket)
-        console.log('[+] New socket connected')
+        console.log('[+] New socket connected from: ' + ip)
         this.messageHandler(socket)
     }
 
@@ -111,14 +113,14 @@ class p2pServer {
                 .then(function(result) {
                     resultado = result
                 }) 
-                if(resultado.ports.open.includes(port)  && resultado.host != "192.168.0.4") {
+                if(resultado.ports.open.includes(port)) {
                     console.log(resultado)
                     var peer = "ws://" + resultado.host + ':' + wsPort
                     // console.log(resultado.host)
                     // hosts.push(result.host)
                     var socket = new webSocket(peer)
                     socket.on('open', () => {
-                        this.connecctSocket(socket)
+                        this.connecctSocket(socket, socket.remoteAddress)
                         socket.send(JSON.stringify({ data: 'Hola'}))
                     })
                 }
