@@ -17,4 +17,14 @@ app.get('/', function(req, res) {
     res.send("sent")
 })
 
+app.get('/lookForPeers', function(req, res) {
+    p2pServer.connectToPeers()
+    res.send('Looking for peers...')
+})
+
+app.get('/listPeers', function(req, res) {
+    
+    res.send(p2pServer.listPeers())
+})
+
 p2pServer.listen()

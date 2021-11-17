@@ -29,9 +29,11 @@ class p2pServer {
     }
 
     sendMessage(message) {
-        this.server.send(message)
+        // this.server.send(message)
         this.sockets.forEach(socket => {
             socket.send(message)
+            console.log('Message sent')
+            socket.send('Hola, acabas de conectar conmigo')
         })
         
     }
@@ -39,6 +41,17 @@ class p2pServer {
     connecctSocket(socket) {
         this.sockets.push(socket)
         console.log('[+] New socket connected')
+        this.messageHandler(socket)
+    }
+
+    messageHandler(socket) {
+        socket.on('message', message => {
+            console.log(message)
+        })
+    }
+
+    listPeers() {
+        return this.sockets
     }
 
     async connectToPeers() {
@@ -92,30 +105,11 @@ class p2pServer {
                     var socket = new webSocket(peer)
                     socket.on('open', () => {
                         this.connecctSocket(socket)
+                        socket.send("Hola")
                     })
                 }
             }
         })
-    
-        // for(var i = ipInitial; i <= ipFinal+1; i++) {
-        //     var ip = "192.168.0." + i
-        //     var resultado
-        //     await nodePortScanner(ip, [port])
-        //     .then(function(result) {
-        //         // console.log(result)
-        //         resultado = result
-        //     }) 
-        //     if(resultado.ports.open.includes(port)  && resultado.host != "192.168.0.4") {
-        //         console.log(resultado)
-        //         var peer = "ws://" + resultado.host + ':' + 5001
-        //         // console.log(resultado.host)
-        //         // hosts.push(result.host)
-        //         var socket = new webSocket(peer)
-        //         socket.on('open', () => {
-        //             this.connecctSocket(socket)
-        //         })
-        //     }
-        // }
     }
 }
 
