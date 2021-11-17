@@ -51,7 +51,7 @@ class p2pServer {
     messageHandler(socket) {
         socket.on('message', message => {
             let mensaje = JSON.parse(message)
-            console.log(mensaje)
+            console.log(mensaje.message)
         })
 
         socket.on('file', file => {
