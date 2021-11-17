@@ -55,7 +55,7 @@ class p2pServer {
     }
 
     async connectToPeers() {
-    
+        console.log('Looking for peers')
         const nodePortScanner = require('node-port-scanner')
 
         const { networkInterfaces } = require('os');
@@ -92,7 +92,6 @@ class p2pServer {
 
         localDevices.forEach(async device => {
             if(!(localAdresses.includes(device.ip))) {
-                var resultado
                 await nodePortScanner(device.ip, [port])
                 .then(function(result) {
                     resultado = result
