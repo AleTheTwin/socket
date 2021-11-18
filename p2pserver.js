@@ -8,7 +8,6 @@ const port = 3000
 const wsPort = 5001
 const { createAvatar } = require('@dicebear/avatars')
 const style = require('@dicebear/adventurer')
-const fs = require('fs');
 
 var ipLocal = []
 

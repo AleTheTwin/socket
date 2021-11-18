@@ -5,10 +5,6 @@ const P2pServer = require('./p2pserver')
 const HTTP_PORT = process.env.HTTP_PORT || 3000
 const app = express()
 
-const { createAvatar } = require('@dicebear/avatars')
-const style = require('@dicebear/adventurer')
-const fs = require('fs');
-
 const p2pServer = new P2pServer()
 
 app.use(express.json())
