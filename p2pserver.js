@@ -106,7 +106,7 @@ class p2pServer {
                 address: socket.address
             }
             socketList.push(sock)
-        })
+        })  
         return socketList
         // console.log(this.getSocketByName('Aspire-E5-411'))
         // return this.sockets
@@ -136,10 +136,12 @@ class p2pServer {
             for (const net of nets[name]) {
                 // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
                 if (net.family === 'IPv4' && !net.internal) {
-                    if (!results[name]) {
-                        results[name] = [];
+                    if(net.address.includes('192.168.0')) {
+                        if (!results[name]) {
+                            results[name] = [];
+                        }
+                        results[name].push(net.address);
                     }
-                    results[name].push(net.address);
                 }
             }
         }
