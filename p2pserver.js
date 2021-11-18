@@ -1,7 +1,7 @@
 const webSocket = require('ws')
 
 const os = require("os")
-const deciveName = os.hostname()
+const deciveName = os.hostname() + ''
 
 // const peers = process.env.PEERS ? process.env.PEERS.split(',') : []
 const port = 3000
@@ -29,7 +29,10 @@ class p2pServer {
     sendMessage(message) {
         this.sockets.forEach(socket => {
             let mensaje = {
-                emiter: ipLocal,
+                emiter: {
+                    address: ipLocal,
+                    name: deciveName
+                },
                 message: message
             }
             socket.socket.send(JSON.stringify(mensaje))
