@@ -48,7 +48,7 @@ app.post('/upload',(req,res) => {
 })
 
 app.get('/generateAvatar', function(req, res) {
-    let svg = P2pServer.generateAvatar(req.query.name)
+    let svg = P2pServer.generateAvatar(req.query.name, req.query.size)
     res.send(svg)
 })
 
@@ -64,8 +64,13 @@ app.get('/changeSetting', function(req, res) {
     
 })
 
-
-
-
-
 p2pServer.listen()
+
+window.onload = loadData
+
+function loadData() {
+    let data = P2pServer.getData()
+    document.getElementById('device-name').innerHTML = data.name
+    document.getElementById('device-ip').innerHTML = data.ip
+    document.getElementById('device-avatar').innerHTML = data.avatar
+}

@@ -1,9 +1,14 @@
-
 const { app, BrowserWindow } = require('electron')
+const express = require('express')
 
+const api = express()
+api.use(express.json())
+const port = process.env.PORT || 8080
+// console.log("Puerto usado: ", port)
 const path = require("path")
 
 var frame 
+var fullscreen = false
 
 function createViewport() {
     frame = new BrowserWindow({
@@ -12,7 +17,7 @@ function createViewport() {
         fullscreenable : true,
         webPreferences : {
             nodeIntegration : true,
-            contextIsolation: false,
+            contextIsolation : false,
             devTools: true
         },
         minWidth : 853,
@@ -23,10 +28,39 @@ function createViewport() {
     })
     frame.loadFile(path.join(__dirname, "index.html"))
     frame.setMenu(null)
-    frame.openDevTools()
+    // frame.openDevTools()
     frame.once('ready-to-show', () => {
         frame.show()
     })
 }
 
 app.on("ready", createViewport)
+
+api.listen(port, function() {
+    console.log("Module Express now listening...")
+})
+
+api.get("/minimize", function(request, response) {
+    frame.minimize()
+    response.send({ 
+        success : true
+    })
+})
+
+api.get("/close", function(request, response) {
+    console.log("Cerrando")
+    app.quit()
+})
+
+api.get("/maximize", function(request, response) {
+    if(fullscreen) {
+        frame.restore()
+        fullscreen = false
+    } else {
+        frame.maximize()
+        fullscreen = true
+    }
+    response.send({
+        success: true
+    })
+})

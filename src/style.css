@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap');
+
+
+html {
+    background: #36393f;
+    color: rgb(206, 205, 205);
+    border-radius: 10px;
+    font-family: 'Roboto Mono', monospace;
+}
+
+body {
+    position: relative;
+    margin: 0 0 0 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.btn {
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.btn-option:hover {
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.btn-option {
+    margin: auto;
+    margin-left: 3px;
+    margin-right: 3px;
+    display: block;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    padding-left: 0;
+}
+
+.option-bar {
+    background: #484b52;
+    height: 25px;
+    display: flex;
+    align-items: center;
+}
+
+
+.option-close {
+    background: red
+}
+
+.option-minimize {
+    background: orange
+}
+
+.option-maximize {
+    background: green
+}
+
+.option-list {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    margin-left: 4px
+}
+
+.dragable {
+    flex-grow: 1;
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+    height: 100%;
+    width: 100%
+}
+
+.device-container {
+    flex-grow: 1;
+    display: flex;
+}
+
+.main-menu {
+    min-width: 220px;
+    max-width: 400px;
+    background: #3C3F45;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-container {
+    display: flex;
+    flex-grow: 1;
+}
+
+.device-info {
+    background: #b5b5b5;
+    color: #3C3F45;
+    border-radius: 10px;
+    display:flex;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+.info {
+    font-size: 10px;
+    text-align: right;
+    flex-grow: 1;
+    margin: 10px 0 10px 0;
+}
+
+.info h1 {
+    margin: 0 0 0 10px;
+}
+
+.info small {
+    font-size:12px
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    background: #ABFD9E;
+    margin: auto 10px auto 10px;
+    border-radius: 50%;
+}
+
+.btn-settings {
+    display: flex;
+    text-align: right;
+    font-size: 12px;
+    margin-right: 20px;
+    justify-content: right;
+}
+
+.btn-settings h1 {
+    margin-bottom: 20px;
+}
+
+.grow {
+    flex-grow: 1;
+}
+
+.searching {
+    flex-grow: 1;
+    text-align: center;
+    margin-top: auto;
+    margin-bottom: auto;
+}

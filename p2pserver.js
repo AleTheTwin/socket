@@ -20,13 +20,23 @@ class p2pServer {
         p2pServer.generateAvatar(deviceName)
     }
 
-    static generateAvatar(name) {
+    static generateAvatar(name, size) {
         return createAvatar(style, {
             seed: name || 'seed',
-            size: 150
+            size: size || 40,
+            backgroundColor: "#ABFD9E",
+            radius: 50
             // ... and other options
             }
         );
+    }
+
+    static getData() {
+        return {
+            name: deviceName,
+            ip: ipLocal,
+            avatar: p2pServer.generateAvatar(deviceName)
+        }
     }
 
     listen() {

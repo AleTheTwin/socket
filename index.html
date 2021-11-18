@@ -4,13 +4,40 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="src/style.css">
     <title>Document</title>
 </head>
 <body>
-    <p id="p"></p>
-
-
-
+    <div class="option-bar">
+        <div class="option-list">
+            <span onclick="closeFrame()" class="option-close btn-option"></span>
+            <span onclick="minimize()" class="option-minimize btn-option"></span>
+            <span onclick="maximize()" class="option-maximize btn-option"></span>
+        </div>
+        <div class="dragable"></div>
+    </div>
+    <div class="main-container">
+        <section class="device-container">
+            <p class="searching">Searching for devices...</p>
+        </section>
+        <section class="main-menu">
+            <div class="grow">
+                <div class="device-info">
+                    <div class="info">
+                        <h1 id="device-name">Mac-mini-de-Angel.local</h1>
+                        <small id="device-ip">192.168.0.0</small>
+                    </div>
+                    <div class="avatar" id="device-avatar"></div>
+                </div>
+            </div>
+            <div class="btn-settings">
+                <h1 class="btn">Settings ⚙️</h1>
+                
+            </div>
+        </section>
+    </div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="index.js"></script>
+    <script src="src/window.js"></script>
 </body>
 </html>
