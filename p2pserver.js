@@ -119,7 +119,6 @@ class p2pServer {
                 }) 
                 if(resultado.ports.open.includes(port)) {
                     var peer = "ws://" + resultado.host + ':' + wsPort
-                    console.log("Connecting with " + peer)
                     var socket = new webSocket(peer)
                     socket.on('open', () => {
                         this.connecctSocket(socket)
