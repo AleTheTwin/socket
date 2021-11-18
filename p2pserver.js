@@ -9,7 +9,7 @@ const wsPort = 5001
 const { createAvatar } = require('@dicebear/avatars')
 const style = require('@dicebear/adventurer')
 
-var ipLocal = []
+var ipLocal
 
 let P2P_PORT = process.env.P2P_PORT || wsPort
 
@@ -152,7 +152,7 @@ class p2pServer {
             localAdresses.push(results[interfaceName][0])
         }
 
-        ipLocal = localAdresses
+        ipLocal = localAdresses[0]
 
         const find = require('local-devices');
 
