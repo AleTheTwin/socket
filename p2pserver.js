@@ -12,16 +12,14 @@ class p2pServer {
     constructor() {
         // this.blockchain = blockchain
         this.sockets = []
-        this
     }
 
     listen() {
         this.server = new webSocket.Server({port: P2P_PORT})
         console.log("Listening for p2p connections on port " + P2P_PORT)
         this.connectToPeers()
-        this.server.on('connection', (socket, req) => {
-            this.connecctSocket(socket, req.socket.remoteAddress)
-            // console.log('connection from ' + socket.url)
+        this.server.on('connection', (socket) => {
+            this.connecctSocket(socket)
         })
     }
 
@@ -31,23 +29,14 @@ class p2pServer {
                 emiter: ipLocal,
                 message: message
             }
-            socket.send(JSON.stringify(mensaje))
+            socket.socket.send(JSON.stringify(mensaje))
             console.log('Message sent')
-            // socket.send(JSON.stringify({ message: message }))
         })
         
     }
 
-    sendFile(file) {
-        this.sockets.forEach(socket => {
-            console.log('File sent')
-            socket.emit('file', file)
-        })
-        
-    }
-
-    connecctSocket(socket, ip) {
-        this.sockets.push(socket)
+    connecctSocket(socket) {
+        // this.sockets.push(socket)
         // console.log('[+] New socket connected from: ' + ip)
         this.messageHandler(socket)
         
@@ -62,16 +51,40 @@ class p2pServer {
     messageHandler(socket) {
         socket.on('message', message => {
             let mensaje = JSON.parse(message)
-            console.log(mensaje)
+            // console.log(mensaje)
+            console.log('[' + mensaje.emiter.nombre + ']: ' + mensaje.message)
         })
 
-        socket.on('file', file => {
-            console.log("Recibiendo archivo")
+        socket.on('message', message => {
+            let mensaje = JSON.parse(message)
+            //Se espera un objeto con la siguiente estructura
+            // var messageData = {
+            //     emiter: {
+            //         address: [],
+            //         name: 'NombreDelSocket'
+            //     },
+            //     message: 'Connection established',
+            // }
+
+            let newSocket = {
+                name: mensaje.emiter.name,
+                address: mensaje.emiter.address,
+                socket: socket           
+            }
+            this.sockets.push(newSocket)
         })
     }
 
     listPeers() {
-        return this.sockets
+        let socketList = []
+        this.sockets.forEach(socket => {
+            let sock = {
+                name: socket.name,
+                address: socket.address
+            }
+            socketList.push(sock)
+        })
+        return socketList
     }
 
     async connectToPeers() {

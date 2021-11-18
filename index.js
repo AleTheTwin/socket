@@ -15,8 +15,8 @@ app.listen(HTTP_PORT, function() {
     console.log('HTTP server listening on port ' + HTTP_PORT)
 })
 
-app.get('/', function(req, res) {
-    p2pServer.sendMessage("Hola")
+app.get('/sendMessage', function(req, res) {
+    p2pServer.sendMessage(req.query.message)
     res.send("sent")
 })
 
@@ -30,10 +30,13 @@ app.get('/listPeers', function(req, res) {
     res.send(p2pServer.listPeers())
 })
 
+app.post('/upload',(req,res) => {
+    let archivo = req.files.file
+    archivo.mv(`./files/${archivo.name}`,err => {
+        if(err) return res.status(500).send({ message : err })
 
-app.get('/mod', function(req, res) {
-    document.getElementById("p").innerHTML = "Modificado"
-    res.send("modified")
+        return res.status(200).send({ message : 'File upload' })
+    })
 })
 
 p2pServer.listen()

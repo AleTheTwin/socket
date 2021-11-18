@@ -22,7 +22,6 @@
     "ws": "^8.2.3"
   },
   "devDependencies": {
-    "binary-file": "^0.2.3",
     "nodemon": "^2.0.15"
   }
 }
