@@ -92,7 +92,7 @@ class p2pServer {
                 address: mensaje.emiter.address,
                 socket: socket           
             }
-            if(this.getSocketByName(newSocket.name) !== undefined) {
+            if(this.getSocketByName(newSocket.name) === undefined) {
                 this.sockets.push(newSocket)
             }
         })
