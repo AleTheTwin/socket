@@ -52,7 +52,7 @@ class p2pServer {
         socket.on('message', message => {
             let mensaje = JSON.parse(message)
             // console.log(mensaje)
-            console.log('[' + mensaje.emiter.nombre + ']: ' + mensaje.message)
+            console.log('[' + mensaje.emiter.name + ']: ' + mensaje.message)
         })
 
         socket.on('message', message => {
