@@ -6,20 +6,23 @@
   "scripts": {
     "test": "node test.js",
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "electron": "electron main.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.24.0",
+    "electron": "^16.0.0",
     "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
     "local-devices": "^3.2.0",
     "node-port-scanner": "^3.0.1",
-    "socket.io": "^4.3.2",
     "ws": "^8.2.3"
   },
   "devDependencies": {
+    "binary-file": "^0.2.3",
     "nodemon": "^2.0.15"
   }
 }
