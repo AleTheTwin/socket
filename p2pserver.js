@@ -1,5 +1,8 @@
 const webSocket = require('ws')
 
+const os = require("os")
+const deciveName = os.hostname()
+
 // const peers = process.env.PEERS ? process.env.PEERS.split(',') : []
 const port = 3000
 const wsPort = 5001
@@ -41,7 +44,10 @@ class p2pServer {
         this.messageHandler(socket)
         
         let message = {
-            emiter: ipLocal,
+            emiter: {
+                address: ipLocal,
+                name: deciveName
+            },
             message: "Connection established"
         }
         // console.log(socket.url)
