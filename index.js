@@ -1,3 +1,9 @@
+//recuperar configuración
+const fs = require('fs');
+var config = require('./config.json')
+
+
+
 const express = require('express')
 const fileUpload = require('express-fileupload')
 
@@ -32,16 +38,30 @@ app.get('/listPeers', function(req, res) {
 
 app.post('/upload',(req,res) => {
     let archivo = req.files.file
-    archivo.mv(`./files/${archivo.name}`,err => {
+    let actualDate = new Date(Date.now())
+    let head = actualDate.getDate() + '-' + actualDate.getMonth() + '-' + actualDate.getFullYear()
+    archivo.mv(config['files-path'] + head + '-' + archivo.name, err => {
         if(err) return res.status(500).send({ message : err })
 
-        return res.status(200).send({ message : 'File upload' })
+        return res.status(200).send({ success : true })
     })
 })
 
 app.get('/generateAvatar', function(req, res) {
     let svg = P2pServer.generateAvatar(req.query.name)
     res.send(svg)
+})
+
+app.get('/changeSetting', function(req, res) {
+    let key = req.query.key
+    let value = req.query.value
+    let actualConfig = config
+    actualConfig[key] = value
+    config = actualConfig
+
+    fs.writeFileSync('./config.json', JSON.stringify(actualConfig))
+    res.send({ success : true })
+    
 })
 
 
