@@ -1,11 +1,14 @@
 const webSocket = require('ws')
 
 const os = require("os")
-const deciveName = os.hostname() + ''
+const deviceName = os.hostname() + ''
 
 // const peers = process.env.PEERS ? process.env.PEERS.split(',') : []
 const port = 3000
 const wsPort = 5001
+const { createAvatar } = require('@dicebear/avatars')
+const style = require('@dicebear/adventurer')
+const fs = require('fs');
 
 var ipLocal = []
 
@@ -15,6 +18,16 @@ class p2pServer {
     constructor() {
         // this.blockchain = blockchain
         this.sockets = []
+        p2pServer.generateAvatar(deviceName)
+    }
+
+    static generateAvatar(name) {
+        return createAvatar(style, {
+            seed: name || 'seed',
+            size: 150
+            // ... and other options
+            }
+        );
     }
 
     listen() {
@@ -31,7 +44,7 @@ class p2pServer {
             let mensaje = {
                 emiter: {
                     address: ipLocal,
-                    name: deciveName
+                    name: deviceName
                 },
                 message: message
             }
@@ -49,7 +62,7 @@ class p2pServer {
         let message = {
             emiter: {
                 address: ipLocal,
-                name: deciveName
+                name: deviceName
             },
             message: "Connection established"
         }
@@ -80,7 +93,9 @@ class p2pServer {
                 address: mensaje.emiter.address,
                 socket: socket           
             }
-            this.sockets.push(newSocket)
+            if(this.getSocketByName(newSocket.name) !== undefined) {
+                this.sockets.push(newSocket)
+            }
         })
     }
 
@@ -94,6 +109,20 @@ class p2pServer {
             socketList.push(sock)
         })
         return socketList
+        // console.log(this.getSocketByName('Aspire-E5-411'))
+        // return this.sockets
+    }
+
+    getSocketByName(name) {
+        //Returns a socket that matches with the name, or undefined if it doesn't exist
+        return this.sockets.find(function(socket) {
+            return socket.name === name
+        })
+    }
+
+    isSocketOwnedBy(name, socket) {
+        // return socket.name === name
+        console.log(name + ":" + socket.name)
     }
 
     async connectToPeers() {
