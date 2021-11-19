@@ -35,6 +35,8 @@ class p2pServer {
 
     close() {
         this.sendMessage("Disconnected")
+        let url = "http://localhost:8080/close"
+        axios.get(url)
     }
 
     static getData() {

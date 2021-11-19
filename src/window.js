@@ -15,7 +15,7 @@ function maximize() {
 }
 
 function closeFrame() {
-    let url = "http://localhost:8080/close"
+    let url = "http://localhost:3000/close"
     axios.get(url)
     .then(function(response) {
 
