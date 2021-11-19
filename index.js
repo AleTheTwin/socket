@@ -64,6 +64,10 @@ app.get('/changeSetting', function(req, res) {
     
 })
 
+app.post('/newConnection', function(req, res) {
+    console.log(req.body)
+})
+
 p2pServer.listen()
 
 window.onload = loadData

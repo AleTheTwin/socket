@@ -1,5 +1,7 @@
 const webSocket = require('ws')
 
+const axios = require('axios').default;
+
 const os = require("os")
 const deviceName = os.hostname() + ''
 
@@ -82,30 +84,38 @@ class p2pServer {
     messageHandler(socket) {
         socket.on('message', message => {
             let mensaje = JSON.parse(message)
+            if(mensaje.message == "Connection established") {
+
+                //Se espera un objeto con la siguiente estructura
+                // var messageData = {
+                //     emiter: {
+                //         address: [],
+                //         name: 'NombreDelSocket'
+                //     },
+                //     message: 'Connection established',
+                // }
+                
+                let newSocket = {
+                    name: mensaje.emiter.name,
+                    address: mensaje.emiter.address,
+                    socket: socket           
+                }
+                if(this.getSocketByName(newSocket.name) === undefined) {
+                    this.sockets.push(newSocket)
+                    let url = "http://localhost:3000/newConnection"
+                    axios.post(url, newSocket)
+                }
+            }
             // console.log(mensaje)
             console.log('[' + mensaje.emiter.name + ']: ' + mensaje.message)
         })
 
-        socket.on('message', message => {
-            let mensaje = JSON.parse(message)
-            //Se espera un objeto con la siguiente estructura
-            // var messageData = {
-            //     emiter: {
-            //         address: [],
-            //         name: 'NombreDelSocket'
-            //     },
-            //     message: 'Connection established',
-            // }
-
-            let newSocket = {
-                name: mensaje.emiter.name,
-                address: mensaje.emiter.address,
-                socket: socket           
-            }
-            if(this.getSocketByName(newSocket.name) === undefined) {
-                this.sockets.push(newSocket)
-            }
-        })
+        // socket.on('message', message => {
+        //     let mensaje = JSON.parse(message)
+            
+            
+            
+        // })
     }
 
     listPeers() {

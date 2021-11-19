@@ -8,7 +8,6 @@ const port = process.env.PORT || 8080
 const path = require("path")
 
 var frame 
-var fullscreen = false
 
 function createViewport() {
     frame = new BrowserWindow({
@@ -26,6 +25,7 @@ function createViewport() {
         show : false,
         frame : false
     })
+
     frame.loadFile(path.join(__dirname, "index.html"))
     frame.setMenu(null)
     // frame.openDevTools()
@@ -53,12 +53,10 @@ api.get("/close", function(request, response) {
 })
 
 api.get("/maximize", function(request, response) {
-    if(fullscreen) {
-        frame.restore()
-        fullscreen = false
+    if(!frame.fullScreen) {
+        frame.fullScreen = true
     } else {
-        frame.maximize()
-        fullscreen = true
+        frame.fullScreen = false
     }
     response.send({
         success: true
