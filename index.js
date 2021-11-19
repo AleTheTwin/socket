@@ -55,7 +55,7 @@ app.get('/generateAvatar', function(req, res) {
 })
 
 app.get('/close', function(req, res) {
-    let url = "localhost:8080/isBusy"
+    let url = "http://localhost:8080/isBusy"
     axios.get(url)
     .then(function(response) {
         if(response.data.isBusy) {
