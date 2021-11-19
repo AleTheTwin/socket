@@ -35,7 +35,7 @@ class p2pServer {
 
     async close() {
         this.sendMessage("Disconnected")
-        await sleep(1000)
+        await sleep(300)
         let url = "http://localhost:8080/close"
         axios.get(url)
     }
@@ -188,7 +188,7 @@ class p2pServer {
         }
 
         ipLocal = localAdresses[0]
-
+        await sleep(500)
         const find = require('local-devices');
 
         // Find all local network devices.

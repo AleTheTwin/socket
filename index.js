@@ -102,12 +102,12 @@ window.onload = loadData
 
 
 async function loadData() {
+    await sleep(1000)
     let data = P2pServer.getData()
     document.getElementById('device-name').innerHTML = data.name
     document.getElementById('device-ip').innerHTML = data.ip
     document.getElementById('device-avatar').innerHTML = data.avatar
     writeSearchingText()
-    await sleep(1500)
     p2pServer.listen()
 }
 
@@ -143,7 +143,6 @@ function renderCard(device) {
 }
 
 function lookForDevices() {
-    let deviceContainer = document.getElementById('device-container')
     writeSearchingText()
     p2pServer.connectToPeers()
 }
