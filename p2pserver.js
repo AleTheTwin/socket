@@ -115,7 +115,7 @@ class p2pServer {
                     })
                 }
             } else if(mensaje.message == "Disconnected") {
-                let disconnected = getSocketByName(mensaje.emiter.name)
+                let disconnected = this.getSocketByName(mensaje.emiter.name)
                 removeItemFromArr(this.sockets, disconnected)
                 let url = "http://localhost:3000/removeFromView?name=" + disconnected.name
                 axios.get(url)
