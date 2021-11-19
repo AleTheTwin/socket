@@ -70,7 +70,7 @@ app.post('/newConnection', function(req, res) {
 
 p2pServer.listen()
 
-// window.onload = loadData
+window.onload = loadData
 
 function loadData() {
     let data = P2pServer.getData()
