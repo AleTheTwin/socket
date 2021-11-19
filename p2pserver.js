@@ -103,7 +103,10 @@ class p2pServer {
                 if(this.getSocketByName(newSocket.name) === undefined) {
                     this.sockets.push(newSocket)
                     let url = "http://localhost:3000/newConnection"
-                    axios.post(url, newSocket)
+                    axios.post(url, {
+                        name: newSocket.name, 
+                        address: newSocket.address
+                    })
                 }
             }
             // console.log(mensaje)
