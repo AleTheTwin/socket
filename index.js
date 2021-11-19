@@ -72,8 +72,9 @@ app.get('/removeFromView', function(req, res) {
     let deviceContainer = document.getElementById('device-container')
     deviceContainer.removeChild(card)
     if(p2pServer.sockets.length == 0) {
-        let searchText = '<p class="searching">Searching for devices...</p>'
-        deviceContainer.innerHTML = searchText
+        // let searchText = '<p class="searching">Searching for devices...</p>'
+        // deviceContainer.innerHTML = searchText
+        writeSearchingText()
     }
 })
 
@@ -99,15 +100,22 @@ app.post('/newConnection', function(req, res) {
 
 window.onload = loadData
 
-function loadData() {
+
+async function loadData() {
     let data = P2pServer.getData()
     document.getElementById('device-name').innerHTML = data.name
     document.getElementById('device-ip').innerHTML = data.ip
     document.getElementById('device-avatar').innerHTML = data.avatar
+    writeSearchingText()
+    await sleep(1500)
     p2pServer.listen()
 }
 
-
+function sleep(ms) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
+}
 
 
 
@@ -127,9 +135,28 @@ function renderCard(device) {
         </div>\
     </div>'
     let deviceContainer = document.getElementById('device-container')
-    if(deviceContainer.innerHTML.includes('<p class="searching">Searching for devices...</p>')) {
+    if(deviceContainer.innerHTML.includes('<p class="searching">Searching for devices...</p>') || deviceContainer.innerHTML.includes('Look for devices')) {
         deviceContainer.innerHTML = card
     } else {
         deviceContainer.innerHTML += card
+    }
+}
+
+function lookForDevices() {
+    let deviceContainer = document.getElementById('device-container')
+    writeSearchingText()
+    p2pServer.connectToPeers()
+}
+
+async function writeSearchingText() {
+    let deviceContainer = document.getElementById('device-container')
+    let searchText = '<p class="searching">Searching for devices...</p>'
+    deviceContainer.innerHTML = searchText
+    await sleep(5000)
+    if(p2pServer.sockets.length == 0) {
+        let button = '<div onclick="lookForDevices()" class="btn searching">\
+                            <h1>Look for devices</h1>\
+                        </div>'
+        deviceContainer.innerHTML = button
     }
 }

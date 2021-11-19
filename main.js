@@ -29,7 +29,7 @@ function createViewport() {
 
     frame.loadFile(path.join(__dirname, "index.html"))
     frame.setMenu(null)
-    // frame.openDevTools()
+    frame.openDevTools()
     frame.once('ready-to-show', () => {
         frame.show()
     })
