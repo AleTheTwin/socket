@@ -65,7 +65,9 @@ app.get('/changeSetting', function(req, res) {
 })
 
 app.post('/newConnection', function(req, res) {
-    console.log(req.body)
+    // console.log(req.body)
+    renderCard(req.body)
+    res.send({ success : true })
 })
 
 p2pServer.listen()
@@ -77,4 +79,31 @@ function loadData() {
     document.getElementById('device-name').innerHTML = data.name
     document.getElementById('device-ip').innerHTML = data.ip
     document.getElementById('device-avatar').innerHTML = data.avatar
+}
+
+
+
+
+
+function renderCard(device) {
+    let card = '<div class="device-card">\
+    <div class=" avatar avatar-card" id="' + device.name + '-avatar">' +  P2pServer.generateAvatar(device.name, 80)  + '</div>\
+        <div class="device-info">\
+            <div class="info info-card">\
+                <h1>' + device.name + '</h1>\
+                <small>' + device.address + '</small>\
+            </div>\
+        </div>\
+        <div class="device-info btn btn-send">\
+            <div class="info info-card">\
+                <h1>Send file</h1>\
+            </div>\
+        </div>\
+    </div>'
+    let deviceContainer = document.getElementById('device-container')
+    if(deviceContainer.innerHTML.includes('<p class="searching">Searching for devices...</p>')) {
+        deviceContainer.innerHTML = card
+    } else {
+        deviceContainer.innerHTML += card
+    }
 }
