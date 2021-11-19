@@ -33,6 +33,10 @@ class p2pServer {
         );
     }
 
+    close() {
+        this.sendMessage("Disconnected")
+    }
+
     static getData() {
         return {
             name: deviceName,
@@ -108,6 +112,11 @@ class p2pServer {
                         address: newSocket.address
                     })
                 }
+            } else if(mensaje.message == "Disconnected") {
+                let disconnected = getSocketByName(mensaje.emiter.name)
+                removeItemFromArr(this.sockets, disconnected)
+                let url = "http://localhost:3000/removeFromView?name=" + disconnected.name
+                axios.get(url)
             }
             // console.log(mensaje)
             console.log('[' + mensaje.emiter.name + ']: ' + mensaje.message)
@@ -201,6 +210,14 @@ class p2pServer {
                 }
             }
         })
+    }
+}
+
+function removeItemFromArr (arr , item) {
+    var i = arr.indexOf( item );
+ 
+    if ( i !== -1 ) {
+        arr.splice( i, 1 );
     }
 }
 

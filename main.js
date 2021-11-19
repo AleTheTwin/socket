@@ -4,10 +4,11 @@ const express = require('express')
 const api = express()
 api.use(express.json())
 const port = process.env.PORT || 8080
-// console.log("Puerto usado: ", port)
 const path = require("path")
 
 var frame 
+
+var isBusy = false
 
 function createViewport() {
     frame = new BrowserWindow({
@@ -28,7 +29,7 @@ function createViewport() {
 
     frame.loadFile(path.join(__dirname, "index.html"))
     frame.setMenu(null)
-    frame.openDevTools()
+    // frame.openDevTools()
     frame.once('ready-to-show', () => {
         frame.show()
     })
@@ -47,8 +48,11 @@ api.get("/minimize", function(request, response) {
     })
 })
 
+api.get('/isBusy', function(request, response) {
+    response.send({isBusy : isBusy})
+})
+
 api.get("/close", function(request, response) {
-    console.log("Cerrando")
     app.quit()
 })
 
