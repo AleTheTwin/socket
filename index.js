@@ -102,13 +102,13 @@ window.onload = loadData
 
 
 async function loadData() {
-    await sleep(1000)
+    p2pServer.listen()
+    await sleep(500)
     let data = P2pServer.getData()
     document.getElementById('device-name').innerHTML = data.name
     document.getElementById('device-ip').innerHTML = data.ip
     document.getElementById('device-avatar').innerHTML = data.avatar
     writeSearchingText()
-    p2pServer.listen()
 }
 
 function sleep(ms) {
