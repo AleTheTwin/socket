@@ -138,15 +138,15 @@ function renderCard(device) {
     let card = '\
     <div class="device-card" id="' + device.name + '-card">\
         <div class="card-content">\
-            <div class=" avatar avatar-card" id="' + device.name + '-avatar"></div>\
+            <div class=" avatar avatar-card" id="' + device.name + '-avatar">' +  P2pServer.generateAvatar(device.name, 80)  + '</div>\
             <div class="device-info">\
                 <div class="info info-card">\
                     <h1>' + device.name + '</h1>\
-                    <small>' + device.ip + '</small>\
+                    <small>' + device.address + '</small>\
                 </div>\
             </div>\
             <div class="device-info btn btn-send">\
-                <div onclick="selectionFrame(' + "'"  + device.name + "','" + device.ip + "'" + ')" id="' + device.name + '-send" class="info info-card">\
+                <div onclick="selectionFrame(' + "'"  + device.name + "','" + device.address + "'" + ')" id="' + device.name + '-send" class="info info-card">\
                     <h1>Send file</h1>\
                 </div>\
             </div>\

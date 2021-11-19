@@ -37,10 +37,12 @@ async function selectionFrame(name, ip) {
     <div class="drag-and-drop" id="drag-and-drop"><p>Drag your file and drop it here</p></div>\
     <small id="path-to-file"></small>\
     <div class="btn btn-select">\
-        <input class="visually-hidden" type="file" name="input-file" id="input-file" multiple>\
+    <form id="file-form" action="http://' + ip + ':3000' + '/upload" method="post" enctype="multipart/form-data">\
+        <input class="visually-hidden" type="file" name="file" id="input-file" multiple>\
         <label for="input-file">Select file 📁</label>\
+    </form>\
     </div>\
-    <div class="device-info btn btn-send">\
+    <div class="device-info btn btn-send" onclick="sendFile()">\
         <div class="info info-card">\
             <h1>Send file</h1>\
         </div>\
@@ -121,4 +123,9 @@ function openModal() {
     let modalShadow = document.getElementById('modal-shadow')
     modal.classList.remove('visually-hidden')
     modalShadow.classList.add('modal-shadow')
+}
+
+function sendFile() {
+    let form = document.getElementById('file-form')
+    form.submit()
 }
