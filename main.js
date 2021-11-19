@@ -12,9 +12,9 @@ var isBusy = false
 
 function createViewport() {
     frame = new BrowserWindow({
-        width : 853,
-        height : 480,
-        fullscreenable : true,
+        width : 900,
+        height : 620,
+        fullscreenable : false,
         webPreferences : {
             nodeIntegration : true,
             contextIsolation : false,
@@ -24,7 +24,9 @@ function createViewport() {
         minHeight : 480,
         backgroundColor : "#74d3f0",
         show : false,
-        frame : false
+        frame : false,
+        maximizable: false,
+        resizable: false
     })
 
     frame.loadFile(path.join(__dirname, "index.html"))

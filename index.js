@@ -120,20 +120,40 @@ function sleep(ms) {
 
 
 function renderCard(device) {
-    let card = '<div class="device-card" id="' + device.name + '-card">\
-    <div class=" avatar avatar-card" id="' + device.name + '-avatar">' +  P2pServer.generateAvatar(device.name, 80)  + '</div>\
-        <div class="device-info">\
-            <div class="info info-card">\
-                <h1>' + device.name + '</h1>\
-                <small>' + device.address + '</small>\
+    // let card = '<div class="device-card" id="' + device.name + '-card">\
+    // <div class=" avatar avatar-card" id="' + device.name + '-avatar">' +  P2pServer.generateAvatar(device.name, 80)  + '</div>\
+    //     <div class="device-info">\
+    //         <div class="info info-card">\
+    //             <h1>' + device.name + '</h1>\
+    //             <small>' + device.address + '</small>\
+    //         </div>\
+    //     </div>\
+    //     <div class="device-info btn btn-send">\
+    //         <div class="info info-card">\
+    //             <h1>Send file</h1>\
+    //         </div>\
+    //     </div>\
+    // </div>'
+
+    let card = '\
+    <div class="device-card" id="' + device.name + '-card">\
+        <div class="card-content">\
+            <div class=" avatar avatar-card" id="' + device.name + '-avatar"></div>\
+            <div class="device-info">\
+                <div class="info info-card">\
+                    <h1>' + device.name + '</h1>\
+                    <small>' + device.ip + '</small>\
+                </div>\
+            </div>\
+            <div class="device-info btn btn-send">\
+                <div onclick="selectionFrame(' + "'"  + device.name + "','" + device.ip + "'" + ')" id="' + device.name + '-send" class="info info-card">\
+                    <h1>Send file</h1>\
+                </div>\
             </div>\
         </div>\
-        <div class="device-info btn btn-send">\
-            <div class="info info-card">\
-                <h1>Send file</h1>\
-            </div>\
-        </div>\
-    </div>'
+        <div class="select-file"></div>\
+    </div>\
+    '
     let deviceContainer = document.getElementById('device-container')
     if(deviceContainer.innerHTML.includes('<p class="searching">Searching for devices...</p>') || deviceContainer.innerHTML.includes('Look for devices')) {
         deviceContainer.innerHTML = card
