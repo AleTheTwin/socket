@@ -33,8 +33,9 @@ class p2pServer {
         );
     }
 
-    close() {
+    async close() {
         this.sendMessage("Disconnected")
+        await sleep(1000)
         let url = "http://localhost:8080/close"
         axios.get(url)
     }
@@ -221,6 +222,12 @@ function removeItemFromArr (arr , item) {
     if ( i !== -1 ) {
         arr.splice( i, 1 );
     }
+}
+
+function sleep(ms) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
 }
 
 module.exports = p2pServer
