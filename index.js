@@ -71,6 +71,10 @@ app.get('/removeFromView', function(req, res) {
     let card = document.getElementById(name + "-card")
     let deviceContainer = document.getElementById('device-container')
     deviceContainer.removeChild(card)
+    if(p2pServer.sockets.length == 0) {
+        let searchText = '<p class="searching">Searching for devices...</p>'
+        deviceContainer.innerHTML = searchText
+    }
 })
 
 app.get('/changeSetting', function(req, res) {
@@ -91,7 +95,7 @@ app.post('/newConnection', function(req, res) {
     res.send({ success : true })
 })
 
-p2pServer.listen()
+
 
 window.onload = loadData
 
@@ -100,6 +104,7 @@ function loadData() {
     document.getElementById('device-name').innerHTML = data.name
     document.getElementById('device-ip').innerHTML = data.ip
     document.getElementById('device-avatar').innerHTML = data.avatar
+    p2pServer.listen()
 }
 
 
