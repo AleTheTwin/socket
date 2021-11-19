@@ -11,6 +11,8 @@ const P2pServer = require('./p2pserver')
 const HTTP_PORT = process.env.HTTP_PORT || 3000
 const app = express()
 
+const axios = require('axios').default;
+
 const p2pServer = new P2pServer()
 
 app.use(express.json())
@@ -52,6 +54,25 @@ app.get('/generateAvatar', function(req, res) {
     res.send(svg)
 })
 
+app.get('/close', function(req, res) {
+    let url = "localhost:8080/isBusy"
+    axios.get(url)
+    .then(function(response) {
+        if(response.data.isBusy) {
+            //en caso de estar ocupado
+        } else {
+            p2pServer.close()
+        }
+    })
+})
+
+app.get('/removeFromView', function(req, res) {
+    let name = req.query.name
+    let card = document.getElementById(name + "-card")
+    let deviceContainer = document.getElementById('device-container')
+    deviceContainer.removeChild(card)
+})
+
 app.get('/changeSetting', function(req, res) {
     let key = req.query.key
     let value = req.query.value
@@ -86,7 +107,7 @@ function loadData() {
 
 
 function renderCard(device) {
-    let card = '<div class="device-card">\
+    let card = '<div class="device-card" id="' + device.name + '-card">\
     <div class=" avatar avatar-card" id="' + device.name + '-avatar">' +  P2pServer.generateAvatar(device.name, 80)  + '</div>\
         <div class="device-info">\
             <div class="info info-card">\
