@@ -1,7 +1,20 @@
 //recuperar configuración
 const fs = require('fs');
-var config = require('./config.json')
 const {shell} = require('electron') 
+const path = require("path")
+
+
+
+var config = require('./config.json')
+
+if(!configHas(config, "files-path")) {
+    console.log(config)
+    config['files-path'] = path.join(__dirname, '/files/').replace(/\\/g, "/")
+    console.log(config)
+    fs.writeFileSync(path.join(__dirname, 'config.json'), JSON.stringify(config))
+}
+
+window.onload = loadData
 
 
 
@@ -131,21 +144,6 @@ function sleep(ms) {
 
 
 function renderCard(device) {
-    // let card = '<div class="device-card" id="' + device.name + '-card">\
-    // <div class=" avatar avatar-card" id="' + device.name + '-avatar">' +  P2pServer.generateAvatar(device.name, 80)  + '</div>\
-    //     <div class="device-info">\
-    //         <div class="info info-card">\
-    //             <h1>' + device.name + '</h1>\
-    //             <small>' + device.address + '</small>\
-    //         </div>\
-    //     </div>\
-    //     <div class="device-info btn btn-send">\
-    //         <div class="info info-card">\
-    //             <h1>Send file</h1>\
-    //         </div>\
-    //     </div>\
-    // </div>'
-
     let card = '\
     <div class="device-card" id="' + device.name + '-card">\
         <div class="card-content">\
@@ -241,4 +239,8 @@ async function recievedConfirmation(path, socket) {
 
 }
 
-window.onload = loadData
+
+function configHas(obj, parameter) {
+    let keys = Object.keys(obj)
+    return keys.includes(parameter)
+}

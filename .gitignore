@@ -88,5 +88,9 @@ typings/
 # Electron-Forge
 out/
 
+src/config.json
+
 config.json
+
+node_modules/
 
