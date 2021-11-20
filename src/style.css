@@ -334,6 +334,13 @@ h1:hover ~ .gear {
 .modal {
     position: absolute;
 }
+
+.select-file > p {
+    text-align: center;
+    margin-top: auto;
+    margin-bottom: auto;
+    font-size: 24px;
+}
 /* 
 .select-file .btn-send .info-card > h1 {
     background: #ABFD9E;

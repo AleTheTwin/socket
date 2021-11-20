@@ -58,7 +58,9 @@ app.get('/generateAvatar', function(req, res) {
 })
 
 app.get('/fileRecieved', function(req, res) {
-    closeModal()
+    // closeModal()
+    let selectionContainer = document.getElementById('select-container')
+    selectionContainer.innerHTML = "<p>File sent ✅</p>"
     res.send({ success : true})
 })
 
