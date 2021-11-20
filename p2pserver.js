@@ -34,8 +34,8 @@ class p2pServer {
     }
 
     sendConfirmation(ip) {
-        let sendTo = this.getSocketByIp(ip)
-        let url = "http://" + sendTo.address + ":" + port + "/fileRecieved"
+        
+        let url = "http://" + this.getSocketByIp(ip).address + ":" + port + "/fileRecieved"
         axios.get(url)
     }
 
@@ -161,10 +161,11 @@ class p2pServer {
     }
 
     getSocketByIp(ip) {
+        console.log(ip)
         //Returns a socket that matches with the name, or undefined if it doesn't exist
         return this.sockets.find(function(socket) {
             // return socket.ip.includes(ip)
-            return ip.includes(socket.ip)
+            return ip.includes(socket.address)
         })
     }
 

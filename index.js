@@ -59,7 +59,7 @@ app.get('/generateAvatar', function(req, res) {
 
 app.get('/fileRecieved', function(req, res) {
     alert('recibido')
-    res.send(yes)
+    res.send({ success : true})
 })
 
 app.get('/close', function(req, res) {
