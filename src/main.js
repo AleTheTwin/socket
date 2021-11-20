@@ -110,11 +110,7 @@ async function selectionFrame(name, ip) {
         evt.preventDefault();
       };
 
-      let frame = document.getElementsByName('frame')[0]
-
-    frame.onchange(function(ev) {
-    console.log(frame.innerHTML)
-})
+      
 }
 
 function closeModal() {
