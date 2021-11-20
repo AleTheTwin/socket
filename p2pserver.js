@@ -34,7 +34,7 @@ class p2pServer {
     }
 
     sendConfirmation(ip) {
-        
+        console.log(ip)
         let url = "http://" + this.getSocketByIp(ip).address + ":" + port + "/fileRecieved"
         axios.get(url)
     }
