@@ -47,8 +47,8 @@ app.post('/upload',(req,res) => {
     let head = actualDate.getDate() + '-' + actualDate.getMonth() + '-' + actualDate.getFullYear()
     archivo.mv(config['files-path'] + head + '-' + archivo.name, err => {
         if(err) return res.status(500).send({ message : err })
-        p2pServer.sendConfirmation(ip)
-        shell.openPath(config['files-path']) 
+        let socket = p2pServer.sendConfirmation(ip)
+        recievedConfirmation(config['files-path'] + head + '-' + archivo.name, socket)
         return res.send({ success: true })
     })
 })
@@ -191,5 +191,54 @@ async function writeSearchingText() {
     }
 }
 
+function openInExplorer(path) {
+    shell.openPath(path)
+}
+
+async function recievedConfirmation(path, socket) {
+    let modalContainer = document.getElementById('modal-content')
+    modalContainer.innerHTML = '\
+    <div id="device-selected" class="device-selected">\
+        <div class="device-card">\
+            <div class="card-content">\
+                <div class=" avatar avatar-card" id="device-selected-avatar"></div>\
+                <div class="device-info">\
+                    <div class="info info-card">\
+                        <h1 id="device-selected-name"></h1>\
+                        <small id="device-selected-ip"></small>\
+                    </div>\
+                </div>\
+            </div>\
+            <div id="select-container" class="select-file"></div>\
+        </div>\
+    </div>\
+    '
+
+    let avatar = document.getElementById(socket.name + '-avatar').innerHTML
+    document.getElementById('device-selected-name').innerHTML = socket.name
+    document.getElementById('device-selected-ip').innerHTML = socket.ip
+    document.getElementById('device-selected-avatar').innerHTML = avatar
+    openModal()
+    
+    let selectionContainer = document.getElementById('select-container')
+    await sleep(750)
+    selectionContainer.classList.add('select-file-space')
+    await sleep(750)
+    selectionContainer.innerHTML = '<p>File recieved ✅</p>\
+    <div>\
+        <div class="device-info btn btn-send" onclick="openInExplorer(' + "'" + path + "'" + ')">\
+            <div class="info info-card">\
+                <h1>Open File</h1>\
+            </div>\
+        </div>\
+        <div class="device-info btn btn-send" onclick="openInExplorer(' + "'" + config['files-path'] + "'" + ')">\
+            <div class="info info-card">\
+                <h1>Show in folder</h1>\
+            </div>\
+        </div>\
+    </div>\
+        '
+
+}
 
 window.onload = loadData

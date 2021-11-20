@@ -133,6 +133,10 @@ function openModal() {
 
 async function sendFile() {
     let form = document.getElementById('file-form')
+
+    let selectionContainer = document.getElementById('select-container')
+    selectionContainer.innerHTML = "<p>Sending File 📤</p>"
+
     form.submit()
 }
 
