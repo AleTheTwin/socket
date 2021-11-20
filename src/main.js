@@ -17,12 +17,11 @@ function createViewport() {
         fullscreenable : false,
         webPreferences : {
             nodeIntegration : true,
-            contextIsolation : false,
-            devTools: true
+            contextIsolation : false
         },
         minWidth : 853,
         minHeight : 480,
-        backgroundColor : "#74d3f0",
+        backgroundColor : "#36393F",
         show : false,
         frame : false,
         maximizable: false,

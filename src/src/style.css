@@ -78,7 +78,6 @@ h1:hover ~ .gear {
 
 .dragable {
     flex-grow: 1;
-    -webkit-user-select: none;
     -webkit-app-region: drag;
     height: 100%;
     width: 100%
