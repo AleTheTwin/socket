@@ -1,33 +1,67 @@
 {
   "name": "socket",
+  "productName": "socket",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Share files with devices from your local network",
+  "main": "src/main.js",
   "scripts": {
-    "test": "node test.js",
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "electron": "electron main.js"
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\""
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "name": "AleTheTwin",
+    "email": "alethetwin@icloud.com"
+  },
+  "license": "MIT",
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "socket"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
+  },
   "dependencies": {
+    "electron-squirrel-startup": "^1.0.0",
     "@dicebear/adventurer": "^4.10.1",
     "@dicebear/avatars": "^4.10.1",
-    "ajax": "^0.0.4",
     "axios": "^0.24.0",
-    "electron": "^16.0.0",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "form-data": "^4.0.0",
-    "jquery": "^3.6.0",
-    "jsdom": "^18.1.0",
     "local-devices": "^3.2.0",
     "node-port-scanner": "^3.0.1",
     "ws": "^8.2.3"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "@electron-forge/cli": "^6.0.0-beta.61",
+    "@electron-forge/maker-deb": "^6.0.0-beta.61",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.61",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
+    "@electron-forge/maker-zip": "^6.0.0-beta.61",
+    "electron": "16.0.1"
   }
 }

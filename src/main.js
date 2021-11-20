@@ -1,144 +1,71 @@
+const { app, BrowserWindow } = require('electron')
+const express = require('express')
 
+const api = express()
+api.use(express.json())
+const port = process.env.PORT || 8080
+const path = require("path")
 
-// const { default: axios } = require('axios');
-const FormData = require('form-data');
+var frame 
 
-async function selectionFrame(name, ip) {
-    let modalContainer = document.getElementById('modal-content')
-    modalContainer.innerHTML = '\
-    <div id="device-selected" class="device-selected">\
-        <div class="device-card">\
-            <div class="card-content">\
-                <div class=" avatar avatar-card" id="device-selected-avatar"></div>\
-                <div class="device-info">\
-                    <div class="info info-card">\
-                        <h1 id="device-selected-name"></h1>\
-                        <small id="device-selected-ip"></small>\
-                    </div>\
-                </div>\
-            </div>\
-            <div id="select-container" class="select-file"></div>\
-        </div>\
-    </div>\
-    '
-    let avatar = document.getElementById(name + '-avatar').innerHTML
-    document.getElementById('device-selected-name').innerHTML = name
-    document.getElementById('device-selected-ip').innerHTML = ip
-    document.getElementById('device-selected-avatar').innerHTML = avatar
-    openModal()
-    // let card = document.getElementById(name + "-card")
-    // let container = document.getElementById('device-container')
-    let selectionContainer = document.getElementById('select-container')
+var isBusy = false
 
-    
-    // container.removeChild(card)
+function createViewport() {
+    frame = new BrowserWindow({
+        width : 900,
+        height : 620,
+        fullscreenable : false,
+        webPreferences : {
+            nodeIntegration : true,
+            contextIsolation : false,
+            devTools: true
+        },
+        minWidth : 853,
+        minHeight : 480,
+        backgroundColor : "#74d3f0",
+        show : false,
+        frame : false,
+        maximizable: false,
+        resizable: false
+    })
 
-    // selectionFrame.appendChild(card)
-    // let selectionContainer = selectionFrame.getElementsByClassName('select-file')[0]
-    await sleep(750)
-    selectionContainer.classList.add('select-file-space')
-    await sleep(750)
-    let selectionContent = '\
-    <div class="drag-and-drop" id="drag-and-drop"><p>Drag your file and drop it here</p></div>\
-    <small id="path-to-file"></small>\
-    <div class="btn btn-select">\
-    <form id="file-form" action="http://' + ip + ':3000' + '/upload" method="post" target="frame2" enctype="multipart/form-data">\
-        <iframe id="frame2" class="visually-hidden" name="frame2"></iframe>\
-        <input class="visually-hidden" type="file" name="file" id="input-file" multiple>\
-        <label class="btn" for="input-file">Select file 📁</label>\
-    </form>\
-    </div>\
-    <div class="device-info btn btn-send" onclick="sendFile()">\
-        <div class="info info-card">\
-            <h1>Send file</h1>\
-        </div>\
-    </div>'
-    selectionContainer.innerHTML = selectionContent
+    frame.loadFile(path.join(__dirname, "index.html"))
+    frame.setMenu(null)
+    // frame.openDevTools()
+    frame.once('ready-to-show', () => {
+        frame.show()
+    })
+}
 
-    let input = document.getElementById('input-file')
+app.on("ready", createViewport)
 
-    input.onchange = function(e) { 
-        let files = input.files
-        let text = ""
-        for(let i = 0; i < files.length; i++) {
-            if(i > 0) {
-                text += "<br>"
-            }
-            if(i > 5) {
-                text += "more..."
-                break
-            } else {
-                text += "📁 " + (files[i].name.slice(0,20)) + (files[i].name.length > 20 ? "..." : "")
-            }
-                
-        }
+api.listen(port, function() {
+    console.log("Module Express now listening...")
+})
 
-        document.getElementById('path-to-file').innerHTML = text
+api.get("/minimize", function(request, response) {
+    frame.minimize()
+    response.send({ 
+        success : true
+    })
+})
+
+api.get('/isBusy', function(request, response) {
+    response.send({isBusy : isBusy})
+})
+
+api.get("/close", function(request, response) {
+    app.quit()
+})
+
+api.get("/maximize", function(request, response) {
+    if(!frame.fullScreen) {
+        frame.fullScreen = true
+    } else {
+        frame.fullScreen = false
     }
-
-    let dropZone = document.getElementById('drag-and-drop')
-
-    // dropZone.addEventListener('dragover', function(e) {
-    //     e.stopPropagation();
-    //     e.preventDefault();
-    //     e.dataTransfer.dropEffect = 'copy';
-    // });
-    dropZone.ondragover = dropZone.ondragenter = function(evt) {
-        evt.preventDefault();
-      };
-      
-      dropZone.ondrop = function(evt) {
-        // pretty simple -- but not for IE :(
-        input.files = evt.dataTransfer.files;
-        
-        let files = input.files
-        let text = ""
-        for(let i = 0; i < files.length; i++) {
-            if(i > 0) {
-                text += "<br>"
-            }
-            if(i > 5) {
-                text += "more..."
-                break
-            } else {
-                text += "📁 " + (files[i].name.slice(0,20)) + (files[i].name.length > 20 ? "..." : "")
-            }
-                
-        }
-
-        document.getElementById('path-to-file').innerHTML = text
-        evt.preventDefault();
-      };
-
-      
-}
-
-function closeModal() {
-    let modal = document.getElementById('modal')
-    let modalShadow = document.getElementById('modal-shadow')
-    modal.classList.add('visually-hidden')
-    modalShadow.classList.remove('modal-shadow')
-    let modalContainer = document.getElementById('modal-content')
-    modalContainer.innerHTML = ""
-}
-
-function openModal() {
-    let modal = document.getElementById('modal')
-    let modalShadow = document.getElementById('modal-shadow')
-    modal.classList.remove('visually-hidden')
-    modalShadow.classList.add('modal-shadow')
-}
-
-
-
-async function sendFile() {
-
-    let frame = document.getElementById('frame')
-    let form = document.getElementById('file-form')
-    frame.appendChild(form)
-    let selectionContainer = document.getElementById('select-container')
-    selectionContainer.innerHTML = "<p>Sending File 📤</p>"
-    form.submit()
-}
-
+    response.send({
+        success: true
+    })
+})
 
