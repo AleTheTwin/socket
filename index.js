@@ -44,7 +44,7 @@ app.post('/upload',(req,res) => {
     let actualDate = new Date(Date.now())
 
     var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress ;
-    let head = actualDate.getDate() + '-' + actualDate.getMonth() + '-' + actualDate.getFullYear() + '-' + actualDate.getHours() + ':' + actualDate.getMinutes() + ':' + actualDate.getSeconds()
+    let head = actualDate.getDate() + '-' + actualDate.getMonth() + '-' + actualDate.getFullYear()
     archivo.mv(config['files-path'] + head + '-' + archivo.name, err => {
         if(err) return res.status(500).send({ message : err })
         let socket = p2pServer.sendConfirmation(ip)
