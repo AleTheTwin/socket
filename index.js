@@ -44,7 +44,7 @@ app.post('/upload',(req,res) => {
     let actualDate = new Date(Date.now())
 
     var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress ;
-    let head = actualDate.getDate() + '-' + actualDate.getMonth() + '-' + actualDate.getFullYear()
+    let head = actualDate.getDate() + '-' + actualDate.getMonth() + '-' + actualDate.getFullYear() + '-' + actualDate.getHours + ':' + actualDate.getMinutes() + ':' + actualDate.getSeconds
     archivo.mv(config['files-path'] + head + '-' + archivo.name, err => {
         if(err) return res.status(500).send({ message : err })
         let socket = p2pServer.sendConfirmation(ip)
@@ -216,7 +216,7 @@ async function recievedConfirmation(path, socket) {
 
     let avatar = document.getElementById(socket.name + '-avatar').innerHTML
     document.getElementById('device-selected-name').innerHTML = socket.name
-    document.getElementById('device-selected-ip').innerHTML = socket.ip
+    document.getElementById('device-selected-ip').innerHTML = socket.address
     document.getElementById('device-selected-avatar').innerHTML = avatar
     openModal()
     

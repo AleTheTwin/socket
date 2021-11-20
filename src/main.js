@@ -42,8 +42,8 @@ async function selectionFrame(name, ip) {
     <div class="drag-and-drop" id="drag-and-drop"><p>Drag your file and drop it here</p></div>\
     <small id="path-to-file"></small>\
     <div class="btn btn-select">\
-    <form id="file-form" action="http://' + ip + ':3000' + '/upload" method="post" target="frame" enctype="multipart/form-data">\
-        <iframe id="frame" class="visually-hidden" name="frame"></iframe>\
+    <form id="file-form" action="http://' + ip + ':3000' + '/upload" method="post" target="frame2" enctype="multipart/form-data">\
+        <iframe id="frame2" class="visually-hidden" name="frame2"></iframe>\
         <input class="visually-hidden" type="file" name="file" id="input-file" multiple>\
         <label class="btn" for="input-file">Select file 📁</label>\
     </form>\
@@ -132,11 +132,13 @@ function openModal() {
 
 
 async function sendFile() {
+
+    let frame = document.getElementById('frame')
     let form = document.getElementById('file-form')
-    form.submit()
+    frame.appendChild(form)
     let selectionContainer = document.getElementById('select-container')
     selectionContainer.innerHTML = "<p>Sending File 📤</p>"
-    
+    form.submit()
 }
 
 
