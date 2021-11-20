@@ -118,6 +118,8 @@ function closeModal() {
     let modalShadow = document.getElementById('modal-shadow')
     modal.classList.add('visually-hidden')
     modalShadow.classList.remove('modal-shadow')
+    let modalContainer = document.getElementById('modal-content')
+    modalContainer.innerHTML = ""
 }
 
 function openModal() {
