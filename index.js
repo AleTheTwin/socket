@@ -1,6 +1,7 @@
 //recuperar configuración
 const fs = require('fs');
 var config = require('./config.json')
+const {shell} = require('electron') 
 
 
 
@@ -42,12 +43,12 @@ app.post('/upload',(req,res) => {
     let archivo = req.files.file
     let actualDate = new Date(Date.now())
 
-    var forwardedIpsStr = req.header('x-forwarded-for');
     var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress ;
     let head = actualDate.getDate() + '-' + actualDate.getMonth() + '-' + actualDate.getFullYear()
     archivo.mv(config['files-path'] + head + '-' + archivo.name, err => {
         if(err) return res.status(500).send({ message : err })
         p2pServer.sendConfirmation(ip)
+        shell.openPath(config['files-path']) 
         return res.send({ success: true })
     })
 })
@@ -105,6 +106,11 @@ app.post('/newConnection', function(req, res) {
     renderCard(req.body)
     res.send({ success : true })
 })
+
+// app.get("/openExplorer", function(request, response) {
+//     let path = request.query.path
+//     shell.openPath(path) 
+// })
 
 async function loadData() {
     p2pServer.listen()

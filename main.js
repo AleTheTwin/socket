@@ -68,3 +68,4 @@ api.get("/maximize", function(request, response) {
         success: true
     })
 })
+
