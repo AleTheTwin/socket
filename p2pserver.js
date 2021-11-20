@@ -33,6 +33,12 @@ class p2pServer {
         );
     }
 
+    sendConfirmation(ip) {
+        let sendTo = this.getSocketByIp(ip)
+        let url = "http://" + sendTo.address + ":" + port + "/fileRecieved"
+        axios.get(url)
+    }
+
     async close() {
         this.sendMessage("Disconnected")
         await sleep(300)
@@ -151,6 +157,14 @@ class p2pServer {
         //Returns a socket that matches with the name, or undefined if it doesn't exist
         return this.sockets.find(function(socket) {
             return socket.name === name
+        })
+    }
+
+    getSocketByIp(ip) {
+        //Returns a socket that matches with the name, or undefined if it doesn't exist
+        return this.sockets.find(function(socket) {
+            // return socket.ip.includes(ip)
+            return ip.includes(socket.ip)
         })
     }
 

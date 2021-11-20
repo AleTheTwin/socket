@@ -1,3 +1,8 @@
+
+
+// const { default: axios } = require('axios');
+const FormData = require('form-data');
+
 async function selectionFrame(name, ip) {
     let modalContainer = document.getElementById('modal-content')
     modalContainer.innerHTML = '\
@@ -37,9 +42,10 @@ async function selectionFrame(name, ip) {
     <div class="drag-and-drop" id="drag-and-drop"><p>Drag your file and drop it here</p></div>\
     <small id="path-to-file"></small>\
     <div class="btn btn-select">\
-    <form id="file-form" action="http://' + ip + ':3000' + '/upload" method="post" enctype="multipart/form-data">\
+    <form id="file-form" action="http://' + ip + ':3000' + '/upload" method="post" target="frame" enctype="multipart/form-data">\
+        <iframe id="frame" class="visually-hidden" name="frame"></iframe>\
         <input class="visually-hidden" type="file" name="file" id="input-file" multiple>\
-        <label for="input-file">Select file 📁</label>\
+        <label class="btn" for="input-file">Select file 📁</label>\
     </form>\
     </div>\
     <div class="device-info btn btn-send" onclick="sendFile()">\
@@ -101,14 +107,14 @@ async function selectionFrame(name, ip) {
         }
 
         document.getElementById('path-to-file').innerHTML = text
-        // If you want to use some of the dropped files
-        // const dT = new DataTransfer();
-        // dT.items.add(evt.dataTransfer.files[0]);
-        // dT.items.add(evt.dataTransfer.files[3]);
-        // input.files = dT.files;
-      
         evt.preventDefault();
       };
+
+      let frame = document.getElementsByName('frame')[0]
+
+    frame.onchange(function(ev) {
+    console.log(frame.innerHTML)
+})
 }
 
 function closeModal() {
@@ -125,7 +131,11 @@ function openModal() {
     modalShadow.classList.add('modal-shadow')
 }
 
-function sendFile() {
+
+
+async function sendFile() {
     let form = document.getElementById('file-form')
     form.submit()
 }
+
+

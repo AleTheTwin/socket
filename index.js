@@ -41,17 +41,25 @@ app.get('/listPeers', function(req, res) {
 app.post('/upload',(req,res) => {
     let archivo = req.files.file
     let actualDate = new Date(Date.now())
+
+    var forwardedIpsStr = req.header('x-forwarded-for');
+    var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress ;
     let head = actualDate.getDate() + '-' + actualDate.getMonth() + '-' + actualDate.getFullYear()
     archivo.mv(config['files-path'] + head + '-' + archivo.name, err => {
         if(err) return res.status(500).send({ message : err })
-
-        return res.status(200).send({ success : true })
+        p2pServer.sendConfirmation(ip)
+        return res.send({ success: true })
     })
 })
 
 app.get('/generateAvatar', function(req, res) {
     let svg = P2pServer.generateAvatar(req.query.name, req.query.size)
     res.send(svg)
+})
+
+app.get('/fileRecieved', function(req, res) {
+    alert('recibido')
+    res.send(yes)
 })
 
 app.get('/close', function(req, res) {
@@ -95,11 +103,6 @@ app.post('/newConnection', function(req, res) {
     renderCard(req.body)
     res.send({ success : true })
 })
-
-
-
-window.onload = loadData
-
 
 async function loadData() {
     p2pServer.listen()
@@ -179,3 +182,6 @@ async function writeSearchingText() {
         deviceContainer.innerHTML = button
     }
 }
+
+
+window.onload = loadData
