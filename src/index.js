@@ -25,7 +25,7 @@ const P2pServer = require('./p2pserver')
 const HTTP_PORT = process.env.HTTP_PORT || 3000
 const app = express()
 
-const axios = require('axios').default;
+const { default: axios } = require('axios');
 
 const p2pServer = new P2pServer()
 
@@ -57,11 +57,18 @@ app.post('/upload',(req,res) => {
     let actualDate = new Date(Date.now())
 
     var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress ;
-    let head = actualDate.getDate() + '-' + actualDate.getMonth() + '-' + actualDate.getFullYear()
-    archivo.mv(config['files-path'] + head + '-' + archivo.name, err => {
+    let filepath = config['files-path'] + actualDate.getDate() + '-' + actualDate.getMonth() + '-' + actualDate.getFullYear() + '-' + actualDate.getHours() + '-' + actualDate.getMinutes() + '-' + actualDate.getSeconds() + '_' + archivo.name
+    archivo.mv(filepath, err => {
         if(err) return res.status(500).send({ message : err })
         let socket = p2pServer.sendConfirmation(ip)
-        recievedConfirmation(config['files-path'] + head + '-' + archivo.name, socket)
+        if(socket == undefined) {
+            socket = {
+                name: req.body.name,
+                address: req.body.ip
+            }
+        }
+        recievedConfirmation(filepath, socket)
+        console.log("File received: " + archivo.name)
         return res.send({ success: true })
     })
 })
@@ -133,6 +140,14 @@ async function loadData() {
     document.getElementById('device-ip').innerHTML = data.ip
     document.getElementById('device-avatar').innerHTML = data.avatar
     writeSearchingText()
+    new QRCode(document.getElementById("qrcode"),{
+        text: "http://" + data.ip + ":3000/upload",
+        width: 128,
+        height: 128,
+        colorDark : "#ABFD9E",
+        colorLight : "#3C3F45",
+        correctLevel : QRCode.CorrectLevel.H
+    });
 }
 
 function sleep(ms) {
@@ -211,8 +226,9 @@ async function recievedConfirmation(path, socket) {
         </div>\
     </div>\
     '
-
-    let avatar = document.getElementById(socket.name + '-avatar').innerHTML
+    let url = "http://localhost:3000/generateAvatar?name=" + socket.name + "&size=80"
+    let response = await axios.get(url)
+    let avatar = response.data
     document.getElementById('device-selected-name').innerHTML = socket.name
     document.getElementById('device-selected-ip').innerHTML = socket.address
     document.getElementById('device-selected-avatar').innerHTML = avatar
