@@ -132,6 +132,24 @@ app.post('/newConnection', function(req, res) {
 //     shell.openPath(path) 
 // })
 
+app.get('/downloadShortcut', function(req, res) {
+    let filename = path.join(__dirname, 'src/shortcut/Socket Send.shortcut')
+    res.download(filename, function(err) {
+        if (err) {
+            console.log(err)
+            res.status(500).send({success : false, error: err})
+        } else {
+            console.log('Sent:', fileName);
+        }
+    })
+})
+
+app.get('/getData', async function(request, response) {
+    let data = P2pServer.getData()
+    await sleep(100)
+    response.send(data)
+})
+
 async function loadData() {
     p2pServer.listen()
     await sleep(500)

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="src/style.css">
+    <title>Socket</title>
+</head>
+<body>
+    <div class="option-bar">
+        <!-- <div class="option-list">
+            <span onclick="closeFrame()" class="option-close btn-option"></span>
+            <span onclick="minimize()" class="option-minimize btn-option"></span> -->
+            <!-- <span onclick="maximize()" class="option-maximize btn-option"></span> -->
+        <!-- </div> -->
+        <div class="dragable"></div>
+    </div>
+    <h1 class="qr-title">Scan this code to download the Socket Send Shortcut, then run it on your iPhone or iPad.</h1>
+    <div class="main-container qr-container">
+        <div id="qr-code">
+        </div>
+    </div>
+    
+    <script src="src/qrcode.js"></script>
+    <!-- <script type="text/javascript">
+        var qrcode = new QRCode(document.getElementById("qr-code"), {
+            text: "/src/shortcut/",
+            width: 128,
+            height: 128,
+            colorDark : "#ABFD9E",
+            colorLight : "#36393f",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+        </script> -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="src/window.js"></script>
+    <script src="src/download-shortcut.js"></script>
+</body>
+</html>

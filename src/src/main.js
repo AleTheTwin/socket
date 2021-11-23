@@ -142,3 +142,7 @@ async function sendFile() {
 }
 
 
+function downloadWindow() {
+    let url = "http://localhost:8080/downloadWindow"
+    axios.get(url)
+}

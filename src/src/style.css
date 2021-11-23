@@ -353,6 +353,20 @@ h1:hover ~ .gear {
     justify-content: center;
 }
 
+.qr-container {
+    justify-content: center;
+}
+
+.qr-title {
+    text-align: center;
+    margin: 20px 32px 20px 32px;
+    font-size: 20px;
+}
+
+#qrcode > img, #qr-code > img {
+    border-radius: 5px;
+}
+
 a {
     color: #ABFD9E
 }

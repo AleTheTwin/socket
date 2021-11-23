@@ -32,7 +32,6 @@ async function createViewport() {
     })
 
     frame.loadFile(path.join(__dirname, "index.html"))
-    frame.setMenu(null)
     // frame.openDevTools()
     frame.once('ready-to-show', () => {
         frame.show()
@@ -86,4 +85,34 @@ async function selectFolder() {
     });
     directorio = directorio.canceled ? undefined : path.resolve(directorio.filePaths[0]).replace(/\\/g, "/")
     return directorio !== undefined ? directorio : false
+}
+
+api.get('/downloadWindow', async function() {
+    createDownloadWindow()
+})
+
+async function createDownloadWindow() {
+    let downloadFrame = new BrowserWindow({
+        width : 800,
+        height : 600,
+        fullscreenable : false,
+        webPreferences : {
+            nodeIntegration : true,
+            contextIsolation : false
+        },
+        minWidth : 853,
+        minHeight : 480,
+        backgroundColor : "#36393F",
+        show : false,
+        downloadFrame : true,
+        maximizable: false,
+        resizable: false
+    })
+
+    downloadFrame.loadFile(path.join(__dirname, "download-shortcut.html"))
+    downloadFrame.removeMenu()
+    // downloadFrame.openDevTools()
+    downloadFrame.once('ready-to-show', () => {
+        downloadFrame.show()
+    })
 }

@@ -152,8 +152,6 @@ class p2pServer {
             socketList.push(sock)
         })  
         return socketList
-        // console.log(this.getSocketByName('Aspire-E5-411'))
-        // return this.sockets
     }
 
     getSocketByName(name) {
@@ -189,7 +187,7 @@ class p2pServer {
             for (const net of nets[name]) {
                 // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
                 if (net.family === 'IPv4' && !net.internal) {
-                    if(net.address.includes('192.168.0')) {
+                    if(net.address.includes('192.168.0') || net.address.includes('192.168.3')) {
                         if (!results[name]) {
                             results[name] = [];
                         }
