@@ -141,6 +141,31 @@ async function sendFile() {
     form.submit()
 }
 
+async function send(){
+    let formdata = new FormData();
+    // let file = document.getElementById('file-input').files[0]
+    let fileStream = await fs.createReadStream("D:/Proyectos/node js/socket/src/test/prueba.txt")
+    formdata.append("file", fileStream);
+    let url = "http://192.168.0.4:3000/upload"
+    axios({
+        method: 'post',
+        url: url,
+        data: formdata,
+        headers: {'Content-Type': 'multipart/form-data;boundary=' + formdata.getBoundary()}
+    })
+    // axios.post(url, {
+    //     file: fileStream,
+    //     user: 'user'
+    // })
+    .then(function(response) {
+        // console.log(response)
+        console.log("listo")
+    })
+    .catch(function(err) {
+        console.log(err.message)
+    })
+}
+
 
 function downloadWindow() {
     let url = "http://localhost:8080/downloadWindow"
