@@ -53,24 +53,44 @@ app.get('/listPeers', function(req, res) {
 })
 
 app.post('/upload',(req,res) => {
-    let archivo = req.files.file
-    let actualDate = new Date(Date.now())
+    // let archivos = req.files.file
+    let archivos = []
 
-    var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress ;
-    let filepath = config['files-path'] + actualDate.getDate() + '-' + actualDate.getMonth() + '-' + actualDate.getFullYear() + '-' + actualDate.getHours() + '-' + actualDate.getMinutes() + '-' + actualDate.getSeconds() + '_' + archivo.name
-    archivo.mv(filepath, err => {
-        if(err) return res.status(500).send({ message : err })
-        let socket = p2pServer.sendConfirmation(ip)
-        if(socket == undefined) {
-            socket = {
-                name: req.body.name,
-                address: req.body.ip
+    // let actualDate = new Date(Date.now())
+    // var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress ;
+    // let filepath = config['files-path'] + actualDate.getDate() + '-' + actualDate.getMonth() + '-' + actualDate.getFullYear() + '-' + actualDate.getHours() + '-' + actualDate.getMinutes() + '-' + actualDate.getSeconds() + '_' + archivo.name
+    
+    if(req.files.file.length == undefined) {
+        archivos.push(req.files.file)
+    } else {
+        archivos = req.files.file
+    }
+
+    for(let i = 0; i < archivos.length; i++) {
+        let archivo = archivos[i]
+        // console.log(archivos[i])
+        let actualDate = new Date(Date.now())
+        var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress ;
+        let filepath = config['files-path'] + actualDate.getDate() + '-' + actualDate.getMonth() + '-' + actualDate.getFullYear() + '-' + actualDate.getHours() + '-' + actualDate.getMinutes() + '-' + actualDate.getSeconds() + '_' + archivo.name
+    
+        archivo.mv(filepath, err => {
+            if(err) return res.status(500).send({ message : err })
+            let socket = p2pServer.sendConfirmation(ip)
+            if(socket == undefined) {
+                socket = {
+                    name: req.body.name,
+                    address: req.body.ip
+                }
             }
+            recievedConfirmation(filepath, socket)
+            console.log("File received: " + archivo.name)
+            // return res.send({ success: true })
+        })
+
+        if(i == archivos.length - 1) {
+            res.send({ success : true })
         }
-        recievedConfirmation(filepath, socket)
-        console.log("File received: " + archivo.name)
-        return res.send({ success: true })
-    })
+    }
 })
 
 app.get('/generateAvatar', function(req, res) {
