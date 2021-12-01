@@ -52,14 +52,9 @@ app.get('/listPeers', function(req, res) {
     res.send(p2pServer.listPeers())
 })
 
-app.post('/upload',(req,res) => {
-    // let archivos = req.files.file
+app.post('/upload', async function(req,res) {
     let archivos = []
 
-    // let actualDate = new Date(Date.now())
-    // var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress ;
-    // let filepath = config['files-path'] + actualDate.getDate() + '-' + actualDate.getMonth() + '-' + actualDate.getFullYear() + '-' + actualDate.getHours() + '-' + actualDate.getMinutes() + '-' + actualDate.getSeconds() + '_' + archivo.name
-    
     if(req.files.file.length == undefined) {
         archivos.push(req.files.file)
     } else {
@@ -68,12 +63,11 @@ app.post('/upload',(req,res) => {
 
     for(let i = 0; i < archivos.length; i++) {
         let archivo = archivos[i]
-        // console.log(archivos[i])
         let actualDate = new Date(Date.now())
         var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress ;
         let filepath = config['files-path'] + actualDate.getDate() + '-' + actualDate.getMonth() + '-' + actualDate.getFullYear() + '-' + actualDate.getHours() + '-' + actualDate.getMinutes() + '-' + actualDate.getSeconds() + '_' + archivo.name
     
-        archivo.mv(filepath, err => {
+        await archivo.mv(filepath, err => {
             if(err) return res.status(500).send({ message : err })
             let socket = p2pServer.sendConfirmation(ip)
             if(socket == undefined) {
@@ -84,7 +78,6 @@ app.post('/upload',(req,res) => {
             }
             recievedConfirmation(filepath, socket)
             console.log("File received: " + archivo.name)
-            // return res.send({ success: true })
         })
 
         if(i == archivos.length - 1) {

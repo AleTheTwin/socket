@@ -22,8 +22,6 @@ async function createViewport() {
             nodeIntegration : true,
             contextIsolation : false
         },
-        minWidth : 853,
-        minHeight : 480,
         backgroundColor : "#36393F",
         show : false,
         frame : false,
