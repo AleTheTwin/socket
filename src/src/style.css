@@ -25,14 +25,6 @@ h1:hover ~ .gear {
     transform: rotate(180deg);
 }
 
-.gear {
-    transition: ease-in-out 1s;
-}
-
-.gear:hover {
-    transform: rotate(180deg);
-}
-
 .btn-option:hover {
     cursor: pointer;
     opacity: 0.7;
@@ -73,7 +65,8 @@ h1:hover ~ .gear {
     display: flex;
     flex-direction: row;
     height: 100%;
-    margin-left: 4px
+    margin-left: 4px;
+    margin-right: 4px;
 }
 
 .dragable {
@@ -81,6 +74,14 @@ h1:hover ~ .gear {
     -webkit-app-region: drag;
     height: 100%;
     width: 100%
+}
+
+.gear {
+    transition: ease-in-out 1s;
+}
+
+.gear:hover {
+    transform: rotate(180deg);
 }
 
 .device-container {
