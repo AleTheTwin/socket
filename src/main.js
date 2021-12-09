@@ -20,13 +20,14 @@ async function createViewport() {
         fullscreenable : false,
         webPreferences : {
             nodeIntegration : true,
-            contextIsolation : false
+            contextIsolation : false,
         },
         backgroundColor : "#36393F",
         show : false,
         frame : false,
         maximizable: false,
-        resizable: false
+        resizable: false,
+        icon: __dirname + '/icons/icon.ico'
     })
 
     frame.loadFile(path.join(__dirname, "index.html"))
