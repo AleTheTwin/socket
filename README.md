@@ -11,7 +11,11 @@ An app for tranfering files in a local network between desktop devices
 
 ## Screens
 
-
+![Dashboard]("https://i.imgur.com/qRhh6dK.png")
+![Sockets connected]("https://i.imgur.com/uVPZRop.png")
+![Sening multiple files]("https://i.imgur.com/KnHA9nZ.png")
+![File sent]("https://i.imgur.com/NANIzaz.png")
+![File recieved]("https://i.imgur.com/I8hHWel.png")
 
 ## Buy me a banana 🍌
 You can help me donating in buymeacoffee [here](https://www.buymeacoffee.com/alethetwin)
