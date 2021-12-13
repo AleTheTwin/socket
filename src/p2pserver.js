@@ -187,7 +187,7 @@ class p2pServer {
             for (const net of nets[name]) {
                 // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
                 if (net.family === 'IPv4' && !net.internal) {
-                    if(net.address.includes('192.168.0') || net.address.includes('192.168.3')) {
+                    if(net.address.includes('192.168.0') || net.address.includes('192.168.3')|| net.address.includes('192.168.1') || net.address.includes('192.168.2') || net.address.includes('192.168.4')) {
                         if (!results[name]) {
                             results[name] = [];
                         }
