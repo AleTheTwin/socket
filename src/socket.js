@@ -58,12 +58,12 @@ class Socket {
         console.log("Connecting to socket on [", ip, "]");
         let socketAddress = "ws://" + ip + ":" + this.wsPort;
         let socket = new WebSocket(socketAddress);
-        socket.onopen = function () {
+        socket.on('open', () => {
             console.log("Socket connected at [", ip, "]");
             let message = JSON.stringify({ type: "request", request: "socket-info" })
             socket.send(message);
             this.listenToSocket(socket);
-        };
+        });
     }
 
     listenToSocket(socket) {
