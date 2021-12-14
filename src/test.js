@@ -1,6 +1,5 @@
 const Socket = require("./socket");
-main()
-
+main();
 
 async function main() {
     let socket = new Socket({ wsPort: 1000 });
@@ -10,14 +9,18 @@ async function main() {
 }
 
 async function bucle(socket) {
+    let count = 0;
     while (true) {
-        console.log(socket.listSockets().map(socket => {
+        let si = socket.listSockets().map((socket) => {
             return socket.name;
-        }));
-        await sleep(2000)
+        });
+        if (si.length > count) {
+            console.log(si);
+            cout++;
+        }
+        await sleep(2000);
     }
 }
-
 
 function sleep(ms) {
     return new Promise((resolve) => {

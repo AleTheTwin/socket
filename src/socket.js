@@ -17,6 +17,8 @@ class Socket {
 
         this.server.on("connection", (socket, req) => {
             let ip = this.ipCorrect(req.socket.remoteAddress);
+            let message = JSON.stringify({ type: "request-info" });
+            socket.send(message);
             this.listenToSocket(socket, ip);
         });
 
