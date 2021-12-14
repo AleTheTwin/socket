@@ -17,7 +17,7 @@ class Socket {
         });
         console.log(
             "Listening for socket connections on port: " +
-                (config ? config.wsPort : 5001)
+                (config ? config.wsPort : 5001) + " on address: ", this.getLocalAdresses()
         );
         this.sockets = [];
         this.name = os.hostname();
@@ -33,18 +33,23 @@ class Socket {
             size: size || 40,
             backgroundColor: "#ABFD9E",
             radius: 50,
-            // ... and other options
         });
     }
 
     async lookForSockets() {
-        const find = require('local-devices');
-        var localDevices = await find()
-        
-        localDevices.forEach(async device => {
-            let result = await nodePortScanner(device.ip, [this.wsPort])
-            console.log(result)
-        })
+        const find = require("local-devices");
+        var localDevices = await find();
+
+        localDevices.forEach(async (device) => {
+            let result = await nodePortScanner(device.ip, [this.wsPort]);
+            if (result.ports.open.includes(this.wsPort)) {
+                this.connectToSocket(device.ip)
+            }
+        });
+    }
+
+    connectToSocket(ip) {
+        console.log("Connecting to socket on [" + ip + "]");
     }
 
     getLocalAdresses() {
