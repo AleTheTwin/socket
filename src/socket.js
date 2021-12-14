@@ -16,7 +16,7 @@ class Socket {
         });
 
         this.server.on("connection", (socket) => {
-            this.listenTo(socket)
+            this.listenToSocket(socket)
         })
 
         console.log(
@@ -62,14 +62,14 @@ class Socket {
             console.log("Socket connected at [", ip, "]");
             let message = JSON.stringify({ type: "request", request: "socket-info" })
             socket.send(message);
-            this.listenTo(socket);
+            this.listenToSocket(socket);
         };
     }
 
-    listenTo(socket) {
-        socket.onmessage = (message) => {
+    listenToSocket(socket) {
+        socket.on('message', message => {
             console.log(message);
-        };
+        });
     }
 
     getLocalAdresses() {
