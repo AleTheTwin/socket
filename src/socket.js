@@ -16,8 +16,8 @@ class Socket {
         });
 
         this.server.on("connection", (socket, req) => {
-            this.listenToSocket(socket, req);
-            console.log(req.socket.remoteAddress)
+            let ip = this.ipCorrect(req.socket.remoteAddress)
+            this.listenToSocket(socket, ip);
         });
 
         console.log(
@@ -49,7 +49,10 @@ class Socket {
 
         localDevices.forEach(async (device) => {
             let result = await nodePortScanner(device.ip, [this.wsPort]);
-            if (result.ports.open.includes(this.wsPort)) {
+            if (
+                result.ports.open.includes(this.wsPort) &&
+                !this.localAdresses.includes(device.ip)
+            ) {
                 this.connectToSocket(device.ip);
             }
         });
@@ -63,11 +66,11 @@ class Socket {
             console.log("Socket connected at [", ip, "]");
             let message = JSON.stringify({ type: "request-info" });
             socket.send(message);
-            this.listenToSocket(socket);
+            this.listenToSocket(socket, ip);
         });
     }
-
-    listenToSocket(socket) {
+    
+    listenToSocket(socket, ip) {
         socket.on("message", (message) => {
             message = JSON.parse(message);
             switch (message.type) {
@@ -79,8 +82,18 @@ class Socket {
                         },
                     };
                     socket.send(JSON.stringify(data));
+                    break;
+                case "socket-info":
+                    let newSocket = {
+                        socket: socket,
+                        name: message.name,
+                        ip : ip
+                    };
+                    this.sockets.push(newSocket);
+                    break;
+                case "message":
+                    console.log(message.message);
             }
-            console.log(message);
         });
     }
 
@@ -103,6 +116,15 @@ class Socket {
         str += "ws port: " + this.wsPort + "\n";
         str += "api port: " + this.apiPort + "\n";
         return str;
+    }
+
+    ipCorrect(ip) {
+        let aux = ip.split("");
+        aux = aux.reverse();
+        aux = aux.join("");
+        let index = aux.indexOf(":");
+        let result = ip.slice(ip.length - index);
+        return result;
     }
 }
 
