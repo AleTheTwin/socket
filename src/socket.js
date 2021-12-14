@@ -60,7 +60,8 @@ class Socket {
         let socket = new WebSocket(socketAddress);
         socket.onopen = function () {
             console.log("Socket connected at [", ip, "]");
-            socket.send({ type: "request", request: "socket-info" });
+            let message = JSON.stringify({ type: "request", request: "socket-info" })
+            socket.send(message);
             this.listenTo(socket);
         };
     }
