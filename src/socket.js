@@ -16,7 +16,7 @@ class Socket {
         });
 
         this.server.on("connection", (socket, req) => {
-            let ip = this.ipCorrect(req.socket.remoteAddress)
+            let ip = this.ipCorrect(req.socket.remoteAddress);
             this.listenToSocket(socket, ip);
         });
 
@@ -69,7 +69,7 @@ class Socket {
             this.listenToSocket(socket, ip);
         });
     }
-    
+
     listenToSocket(socket, ip) {
         socket.on("message", (message) => {
             message = JSON.parse(message);
@@ -86,8 +86,8 @@ class Socket {
                 case "socket-info":
                     let newSocket = {
                         socket: socket,
-                        name: message.name,
-                        ip : ip
+                        name: message.socket.name,
+                        ip: ip,
                     };
                     this.sockets.push(newSocket);
                     break;
@@ -95,6 +95,10 @@ class Socket {
                     console.log(message.message);
             }
         });
+    }
+
+    listSockets() {
+        return this.sockets
     }
 
     getLocalAdresses() {
