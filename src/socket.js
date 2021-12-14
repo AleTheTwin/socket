@@ -16,8 +16,8 @@ class Socket {
         });
 
         this.server.on("connection", (socket) => {
-            this.listenToSocket(socket)
-        })
+            this.listenToSocket(socket);
+        });
 
         console.log(
             "Listening for socket connections on port: " +
@@ -58,17 +58,27 @@ class Socket {
         console.log("Connecting to socket on [", ip, "]");
         let socketAddress = "ws://" + ip + ":" + this.wsPort;
         let socket = new WebSocket(socketAddress);
-        socket.on('open', () => {
+        socket.on("open", () => {
             console.log("Socket connected at [", ip, "]");
-            let message = JSON.stringify({ type: "request", request: "socket-info" })
+            let message = JSON.stringify({ type: "request-info" });
             socket.send(message);
             this.listenToSocket(socket);
         });
     }
 
     listenToSocket(socket) {
-        socket.on('message', message => {
-            console.log(message);
+        socket.on("message", (message) => {
+            message = JSON.parse(message);
+            switch (message.type) {
+                case "request-info":
+                    let data = {
+                        type: "socket-info",
+                        socket: {
+                            name: this.name,
+                        },
+                    };
+                    socket.send(JSON.stringify(data));
+            }
         });
     }
 
