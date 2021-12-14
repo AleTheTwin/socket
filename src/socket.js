@@ -79,6 +79,7 @@ class Socket {
                     };
                     socket.send(JSON.stringify(data));
             }
+            console.log(message);
         });
     }
 
