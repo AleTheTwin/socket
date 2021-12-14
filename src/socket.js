@@ -15,8 +15,9 @@ class Socket {
             port: config ? config.wsPort : 5001,
         });
 
-        this.server.on("connection", (socket) => {
-            this.listenToSocket(socket);
+        this.server.on("connection", (socket, req) => {
+            this.listenToSocket(socket, req);
+            console.log(req.socket.remoteAddress)
         });
 
         console.log(
