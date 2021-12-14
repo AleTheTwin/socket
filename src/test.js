@@ -16,7 +16,7 @@ async function bucle(socket) {
         });
         if (si.length > count) {
             console.log(si);
-            cout++;
+            count++;
         }
         await sleep(2000);
     }
