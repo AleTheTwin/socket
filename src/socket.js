@@ -8,16 +8,22 @@ const { networkInterfaces } = require("os");
 
 const { createAvatar } = require("@dicebear/avatars");
 const style = require("@dicebear/adventurer");
-const localIps = [];
 
 class Socket {
     constructor(config) {
         this.server = new WebSocket.Server({
             port: config ? config.wsPort : 5001,
         });
+
+        this.server.on("connection", (socket) => {
+            this.listenTo(socket)
+        })
+
         console.log(
             "Listening for socket connections on port: " +
-                (config ? config.wsPort : 5001) + " on address: ", this.getLocalAdresses()
+                (config ? config.wsPort : 5001) +
+                " from address: ",
+            this.getLocalAdresses()
         );
         this.sockets = [];
         this.name = os.hostname();
@@ -43,13 +49,26 @@ class Socket {
         localDevices.forEach(async (device) => {
             let result = await nodePortScanner(device.ip, [this.wsPort]);
             if (result.ports.open.includes(this.wsPort)) {
-                this.connectToSocket(device.ip)
+                this.connectToSocket(device.ip);
             }
         });
     }
 
     connectToSocket(ip) {
-        console.log("Connecting to socket on [" + ip + "]");
+        console.log("Connecting to socket on [", ip, "]");
+        let socketAddress = "ws://" + ip + ":" + this.wsPort;
+        let socket = new WebSocket(socketAddress);
+        socket.onopen = function () {
+            console.log("Socket connected at [", ip, "]");
+            socket.send({ type: "request", request: "socket-info" });
+            this.listenTo(socket);
+        };
+    }
+
+    listenTo(socket) {
+        socket.onmessage = (message) => {
+            console.log(message);
+        };
     }
 
     getLocalAdresses() {
