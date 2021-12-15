@@ -111,8 +111,7 @@ class Socket extends EventEmitter {
 
     initClient() {
         console.log(
-            "Initializing Socket Client, trying to establish connection with " +
-                this.PORT
+            "Initializing Socket Client"
         );
     }
 
@@ -121,6 +120,7 @@ class Socket extends EventEmitter {
         localDevices.forEach(async device => {
             let result = await nodePortScanner(device.ip, [this.PORT])
             if(result.ports.open.includes(this.PORT)) {
+                console.log("device found, checking for socket available")
                 this.connectToSocket(device.ip)
             }
         })
