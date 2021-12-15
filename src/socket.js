@@ -8,6 +8,10 @@ const fileUpload = require("express-fileupload");
 const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 const { randomUUID } = require("crypto");
+const find = require('local-devices');
+const nodePortScanner = require("node-port-scanner");
+const { networkInterfaces } = require("os");
+const nets = networkInterfaces();
 
 class Socket extends EventEmitter {
     constructor(options, type = Socket.CLIENT) {
@@ -20,8 +24,9 @@ class Socket extends EventEmitter {
         this.PORT = options.port;
 
         this.token = undefined;
-        this.address = ""
+        this.address = "";
         this.sockets = [];
+        this.localAdresses = this.getLocalAddresses()
 
         switch (type) {
             case Socket.SERVER: {
@@ -99,9 +104,9 @@ class Socket extends EventEmitter {
             });
         });
 
-        this.app.get("/", (req, res ) => {
-            res.json({isSocket: true});
-        })
+        this.app.get("/", (req, res) => {
+            res.json({ isSocket: true });
+        });
     }
 
     initClient() {
@@ -111,29 +116,50 @@ class Socket extends EventEmitter {
         );
     }
 
+    async lookForSockets() {
+        let localDevices = await find()
+        localDevices.forEach(async device => {
+            let result = await nodePortScanner(device.ip, [this.PORT])
+            if(result.ports.open.includes(this.PORT)) {
+                this.connectToSocket(device.ip)
+            }
+        })
+    }
+
+    getLocalAddresses() {
+        let result = []
+        for (const name of Object.keys(nets)) {
+            for (const net of nets[name]) {
+                // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+                if (net.family === "IPv4" && !net.internal) {
+                    result.push(net.address);
+                }
+            }
+        }
+        return result;
+    }
+
     async connectToSocket(address) {
         let url = "http://" + address + ":" + this.PORT;
 
-        if(this.getSocketByAddress(address) !== undefined) {
-            return
+        if (this.getSocketByAddress(address) !== undefined) {
+            return;
         }
-        
-        try {
-            let response = await axios.get(url)
-            if(response.status !== 200) {
-                return
-            }
-            let token = response.data.token
-            let socket = new Socket({port: this.PORT, token: token})
-        } catch (e) {
 
-        }
+        try {
+            let response = await axios.get(url);
+            if (response.status !== 200) {
+                return;
+            }
+            let token = response.data.token;
+            let socket = new Socket({ port: this.PORT, token: token });
+        } catch (e) {}
     }
 
     getSocketByAddress(address) {
-        return this.sockets.find(function(socket) {
-            return socket.address === address
-        })
+        return this.sockets.find(function (socket) {
+            return socket.address === address;
+        });
     }
 
     async isSocket(address) {
