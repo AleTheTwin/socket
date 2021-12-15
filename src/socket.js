@@ -24,7 +24,6 @@ class Socket extends EventEmitter {
         super();
         this.PORT = options.port;
 
-
         switch (type) {
             case Socket.SERVER: {
                 this.localAdresses = this.getLocalAddresses();
@@ -51,6 +50,25 @@ class Socket extends EventEmitter {
         }
     }
 
+    async ping() {
+        console.log("[SERVER] Looking for dead sockets.")
+        this.sockets.forEach(socket => {
+            try {
+                let url = "http://" + socket.address + ":" + this.PORT + "/";
+                await axios.get(url)
+            } catch (e) {
+                this.disconnect(socket)
+            }
+        })
+    }
+
+    disconnect(socketToDelete) {
+        console.log("[SERVER] Socket " + socketToDelete.name + " [" + socketToDelete.address + "] disconnected")
+        this.sockets.filter(socket => {
+            socket.address != socketToDelete.address 
+        })
+    }
+
     initServer() {
         console.log("Initializing Socket Server");
         this.app = express();
@@ -71,7 +89,7 @@ class Socket extends EventEmitter {
             }
             this.app.use(bodyParser.urlencoded({ extended: true }));
             this.app.listen(this.PORT, () => {
-                console.log("[SERVER] listening on port " + this.PORT);
+                console.log("[SERVER] listening on port " + this.PORT + "\n");
             });
         } catch (exception) {
             console.log(exception);
@@ -99,9 +117,8 @@ class Socket extends EventEmitter {
                 res.status(403).json({ message: "Only sockets can connect" });
                 return;
             }
-            console.log(
-                "[SERVER] Connection accepted. Pairing with socket " + address
-            );
+            console.log("[SERVER] Connection accepted.");
+            console.log("[SERVER] Pairing with Socket at 192.168.0.21.");
             this.connectToSocket(address);
             const payload = {
                 check: true,
@@ -120,10 +137,13 @@ class Socket extends EventEmitter {
         this.app.get("/", (req, res) => {
             res.json({ isSocket: true });
         });
+
+        //At the end of the initialization process start ping process
+        setInterval(ping(), 10000)
     }
 
     initClient() {
-        console.log("[SERVER] Initializing Socket Client");
+        // console.log("[SERVER] Initializing Socket Client");
     }
 
     async lookForSockets() {
@@ -165,10 +185,16 @@ class Socket extends EventEmitter {
                 port: this.PORT,
                 token: token,
                 address: address,
-                name: name
+                name: name,
             });
             this.sockets.push(socket);
-            console.log("[SERVER] Socket [" + socket.address + "] connected.");
+            console.log(
+                "[SERVER] Socket " +
+                    socket.name +
+                    " [" +
+                    socket.address +
+                    "] connected."
+            );
         } catch (e) {}
     }
 
