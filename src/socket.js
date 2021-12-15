@@ -153,6 +153,7 @@ class Socket extends EventEmitter {
             }
             let token = response.data.token;
             let socket = new Socket({ port: this.PORT, token: token });
+            console.log("Socket connected.")
         } catch (e) {}
     }
 
