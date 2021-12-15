@@ -55,7 +55,7 @@ class Socket extends EventEmitter {
         this.sockets.forEach(socket => {
             try {
                 let url = "http://" + socket.address + ":" + this.PORT + "/";
-                await axios.get(url)
+                axios.get(url)
             } catch (e) {
                 this.disconnect(socket)
             }
