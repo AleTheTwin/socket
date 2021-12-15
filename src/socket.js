@@ -140,8 +140,8 @@ class Socket extends EventEmitter {
     }
 
     async connectToSocket(address) {
+        console.log("Trying to connect to socket " + address)
         let url = "http://" + address + ":" + this.PORT;
-
         if (this.getSocketByAddress(address) !== undefined) {
             return;
         }
