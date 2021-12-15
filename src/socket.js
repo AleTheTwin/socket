@@ -80,7 +80,7 @@ class Socket extends EventEmitter {
             });
         }
 
-        this.app.get("/connection", async (req, res) => {
+        this.app.get("/connect", async (req, res) => {
             let address =
                 req.headers["x-forwarded-for"] || req.socket.remoteAddress;
             console.log("Connection from " + address);
@@ -141,7 +141,7 @@ class Socket extends EventEmitter {
 
     async connectToSocket(address) {
         console.log("Trying to connect to socket " + address)
-        let url = "http://" + address + ":" + this.PORT;
+        let url = "http://" + address + ":" + this.PORT + "/connect";
         if (this.getSocketByAddress(address) !== undefined) {
             return;
         }
