@@ -86,11 +86,9 @@ class Socket extends EventEmitter {
             let address =
                 req.headers["x-forwarded-for"] || req.socket.remoteAddress;
             address = Socket.correctAddress(address);
-            if (this.getSocketByAddress(address) !== undefined) {
-                res.status(403).json({ message: "Already connected"})
-                return;
+            if (this.getSocketByAddress(address) === undefined) {
+                console.log("[SERVER] Connection from " + address);
             }
-            console.log("[SERVER] Connection from " + address);
 
             if (!(await this.isSocket(address))) {
                 console.log(
@@ -152,6 +150,10 @@ class Socket extends EventEmitter {
     }
 
     async connectToSocket(address) {
+        if (this.getSocketByAddress(address) !== undefined) {
+            res.status(403).json({ message: "Already connected"})
+            return;
+        }
         let url = "http://" + address + ":" + this.PORT + "/connect";
         try {
             let response = await axios.get(url);
