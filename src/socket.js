@@ -50,16 +50,18 @@ class Socket extends EventEmitter {
         }
     }
 
-    async ping() {
+    ping() {
         console.log("[SERVER] Looking for dead sockets.")
-        this.sockets.forEach(socket => {
-            try {
-                let url = "http://" + socket.address + ":" + this.PORT + "/";
-                axios.get(url)
-            } catch (e) {
-                this.disconnect(socket)
-            }
-        })
+        if(this.sockets.length !== 0) {
+            this.sockets.forEach(socket => {
+                try {
+                    let url = "http://" + socket.address + ":" + this.PORT + "/";
+                    axios.get(url)
+                } catch (e) {
+                    this.disconnect(socket)
+                }
+            })
+        }        
     }
 
     disconnect(socketToDelete) {
@@ -139,7 +141,8 @@ class Socket extends EventEmitter {
         });
 
         //At the end of the initialization process start ping process
-        setInterval(ping(), 10000)
+        let copy = this
+        setInterval(this.ping.bind(this), 10000)
     }
 
     initClient() {
