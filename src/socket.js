@@ -86,6 +86,10 @@ class Socket extends EventEmitter {
             let address =
                 req.headers["x-forwarded-for"] || req.socket.remoteAddress;
             address = Socket.correctAddress(address);
+            if (this.getSocketByAddress(address) !== undefined) {
+                res.status(403).json({ message: "Already connected"})
+                return;
+            }
             console.log("[SERVER] Connection from " + address);
 
             if (!(await this.isSocket(address))) {
@@ -129,7 +133,6 @@ class Socket extends EventEmitter {
         localDevices.forEach(async (device) => {
             let result = await nodePortScanner(device.ip, [this.PORT]);
             if (result.ports.open.includes(this.PORT)) {
-                console.log("device found, checking for socket available");
                 this.connectToSocket(device.ip);
             }
         });
@@ -150,10 +153,6 @@ class Socket extends EventEmitter {
 
     async connectToSocket(address) {
         let url = "http://" + address + ":" + this.PORT + "/connect";
-        if (this.getSocketByAddress(address) !== undefined) {
-            return;
-        }
-
         try {
             let response = await axios.get(url);
             if (response.status !== 200) {
