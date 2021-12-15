@@ -8,7 +8,7 @@ const fileUpload = require("express-fileupload");
 const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 const { randomUUID } = require("crypto");
-const find = require('local-devices');
+const find = require("local-devices");
 const nodePortScanner = require("node-port-scanner");
 const { networkInterfaces } = require("os");
 const nets = networkInterfaces();
@@ -26,7 +26,7 @@ class Socket extends EventEmitter {
         this.token = undefined;
         this.address = "";
         this.sockets = [];
-        this.localAdresses = this.getLocalAddresses()
+        this.localAdresses = this.getLocalAddresses();
 
         switch (type) {
             case Socket.SERVER: {
@@ -66,10 +66,9 @@ class Socket extends EventEmitter {
                     })
                 );
             }
-            console.log(this.app.get("secret"));
             this.app.use(bodyParser.urlencoded({ extended: true }));
             this.app.listen(this.PORT, () => {
-                console.log("listening on port " + this.PORT);
+                console.log("[SERVER] listening on port " + this.PORT);
             });
         } catch (exception) {
             console.log(exception);
@@ -83,14 +82,16 @@ class Socket extends EventEmitter {
         this.app.get("/connect", async (req, res) => {
             let address =
                 req.headers["x-forwarded-for"] || req.socket.remoteAddress;
-            console.log("Connection from " + address);
-            address = Socket.correctaddress(address);
+            address = Socket.correctAddress(address);
+            console.log("[SERVER] Connection from " + address);
 
             if (!(await this.isSocket(address))) {
+                console.log("[SERVER] Connection refused to " + address + ". No Socket found.");
                 res.status(403).json({ message: "Only sockets can connect" });
                 return;
             }
-
+            console.log("[SERVER] Connection accepted. Pairing with socket " + address)
+            this.connectToSocket(address)
             const payload = {
                 check: true,
             };
@@ -110,24 +111,22 @@ class Socket extends EventEmitter {
     }
 
     initClient() {
-        console.log(
-            "Initializing Socket Client"
-        );
+        console.log("[SERVER] Initializing Socket Client");
     }
 
     async lookForSockets() {
-        let localDevices = await find()
-        localDevices.forEach(async device => {
-            let result = await nodePortScanner(device.ip, [this.PORT])
-            if(result.ports.open.includes(this.PORT)) {
-                console.log("device found, checking for socket available")
-                this.connectToSocket(device.ip)
+        let localDevices = await find();
+        localDevices.forEach(async (device) => {
+            let result = await nodePortScanner(device.ip, [this.PORT]);
+            if (result.ports.open.includes(this.PORT)) {
+                console.log("device found, checking for socket available");
+                this.connectToSocket(device.ip);
             }
-        })
+        });
     }
 
     getLocalAddresses() {
-        let result = []
+        let result = [];
         for (const name of Object.keys(nets)) {
             for (const net of nets[name]) {
                 // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
@@ -140,7 +139,7 @@ class Socket extends EventEmitter {
     }
 
     async connectToSocket(address) {
-        console.log("Trying to connect to socket " + address)
+        console.log("Trying to connect to socket " + address);
         let url = "http://" + address + ":" + this.PORT + "/connect";
         if (this.getSocketByAddress(address) !== undefined) {
             return;
@@ -153,7 +152,7 @@ class Socket extends EventEmitter {
             }
             let token = response.data.token;
             let socket = new Socket({ port: this.PORT, token: token });
-            console.log("Socket connected.")
+            console.log("Socket connected.");
         } catch (e) {}
     }
 
