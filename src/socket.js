@@ -151,7 +151,6 @@ class Socket extends EventEmitter {
 
     async connectToSocket(address) {
         if (this.getSocketByAddress(address) !== undefined) {
-            res.status(403).json({ message: "Already connected"})
             return;
         }
         let url = "http://" + address + ":" + this.PORT + "/connect";
