@@ -10,6 +10,7 @@ const bodyParser = require("body-parser");
 const { randomUUID } = require("crypto");
 const find = require("local-devices");
 const nodePortScanner = require("node-port-scanner");
+const os = require("os");
 const { networkInterfaces } = require("os");
 const nets = networkInterfaces();
 
@@ -23,18 +24,20 @@ class Socket extends EventEmitter {
         super();
         this.PORT = options.port;
 
-        this.token = undefined;
-        this.address = "";
-        this.sockets = [];
-        this.localAdresses = this.getLocalAddresses();
 
         switch (type) {
             case Socket.SERVER: {
+                this.localAdresses = this.getLocalAddresses();
+                this.sockets = [];
+                this.name = os.hostname();
                 this.initServer();
                 break;
             }
             case Socket.CLIENT: {
-                this.initClient();
+                this.token = options.token;
+                this.name = options.name;
+                this.address = options.address;
+                this.initClient(options);
                 break;
             }
 
@@ -86,12 +89,18 @@ class Socket extends EventEmitter {
             console.log("[SERVER] Connection from " + address);
 
             if (!(await this.isSocket(address))) {
-                console.log("[SERVER] Connection refused to " + address + ". No Socket found.");
+                console.log(
+                    "[SERVER] Connection refused to " +
+                        address +
+                        ". No Socket found."
+                );
                 res.status(403).json({ message: "Only sockets can connect" });
                 return;
             }
-            console.log("[SERVER] Connection accepted. Pairing with socket " + address)
-            this.connectToSocket(address)
+            console.log(
+                "[SERVER] Connection accepted. Pairing with socket " + address
+            );
+            this.connectToSocket(address);
             const payload = {
                 check: true,
             };
@@ -101,6 +110,7 @@ class Socket extends EventEmitter {
 
             res.json({
                 message: "Connection established",
+                name: this.name,
                 token: token,
             });
         });
@@ -139,7 +149,6 @@ class Socket extends EventEmitter {
     }
 
     async connectToSocket(address) {
-        console.log("Trying to connect to socket " + address);
         let url = "http://" + address + ":" + this.PORT + "/connect";
         if (this.getSocketByAddress(address) !== undefined) {
             return;
@@ -151,8 +160,15 @@ class Socket extends EventEmitter {
                 return;
             }
             let token = response.data.token;
-            let socket = new Socket({ port: this.PORT, token: token });
-            console.log("Socket connected.");
+            let name = response.data.name;
+            let socket = new Socket({
+                port: this.PORT,
+                token: token,
+                address: address,
+                name: name
+            });
+            this.sockets.push(socket);
+            console.log("[SERVER] Socket [" + socket.address + "] connected.");
         } catch (e) {}
     }
 
