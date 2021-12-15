@@ -95,3 +95,5 @@ config.json
 node_modules/
 
 *.zip
+
+*.key

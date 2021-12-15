@@ -11,7 +11,6 @@
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\"",
     "test": "node src/test.js",
-    
     "package-linux": "electron-packager . --overwrite --platform=linux --arch=x64 --prune=true --out=out --icon src/icons/icon.png",
     "package-win": "electron-packager . --overwrite --platform=win32 --arch=x64 --prune=true --out=out --icon src/icons/icon.png",
     "package-mac-arm": "electron-packager . --overwrite --platform=mas --arch=arm64 --prune=true --out=out --icon src/icons/icon.png",
@@ -62,8 +61,11 @@
     "express-fileupload": "^1.2.1",
     "form-data": "^4.0.0",
     "got": "^11.8.3",
+    "jsonwebtoken": "^8.5.1",
     "local-devices": "^3.2.0",
     "node-port-scanner": "^3.0.1",
+    "platform-folders": "^0.5.4",
+    "uuid": "^8.3.2",
     "ws": "^8.2.3"
   },
   "devDependencies": {

@@ -31,7 +31,7 @@ async function createViewport() {
     })
 
     frame.loadFile(path.join(__dirname, "index.html"))
-    // frame.openDevTools()
+    frame.openDevTools()
     frame.once('ready-to-show', () => {
         frame.show()
     })

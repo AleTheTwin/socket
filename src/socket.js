@@ -1,143 +1,182 @@
 "use strict";
+const EventEmitter = require("events");
+const fs = require("fs");
+const { shell } = require("electron");
+const { default: axios } = require("axios");
+const express = require("express");
+const fileUpload = require("express-fileupload");
+const jwt = require("jsonwebtoken");
+const bodyParser = require("body-parser");
+const { randomUUID } = require("crypto");
 
-const WebSocket = require("ws");
-const axios = require("axios").default;
-const os = require("os");
-const nodePortScanner = require("node-port-scanner");
-const { networkInterfaces } = require("os");
+class Socket extends EventEmitter {
+    constructor(options, type = Socket.CLIENT) {
+        if (options === undefined || options.port === undefined) {
+            throw new Error(
+                "You must specify a port with (type, {port:XXXX,})."
+            );
+        }
+        super();
+        this.PORT = options.port;
 
-const { createAvatar } = require("@dicebear/avatars");
-const style = require("@dicebear/adventurer");
-
-class Socket {
-    constructor(config) {
-        this.server = new WebSocket.Server({
-            port: config ? config.wsPort : 5001,
-        });
-
-        this.server.on("connection", (socket, req) => {
-            let ip = this.ipCorrect(req.socket.remoteAddress);
-            let message = JSON.stringify({ type: "request-info" });
-            socket.send(message);
-            this.listenToSocket(socket, ip);
-        });
-
-        console.log(
-            "Listening for socket connections on port: " +
-                (config ? config.wsPort : 5001) +
-                " from address: ",
-            this.getLocalAdresses()
-        );
+        this.token = undefined;
+        this.address = ""
         this.sockets = [];
-        this.name = os.hostname();
-        this.wsPort = config ? config.wsPort : 5001;
-        this.apiPort = config ? config.apiPort : 3000;
-        this.avatar = Socket.generateAvatar(this.name);
-        this.localAdresses = this.getLocalAdresses();
-    }
 
-    static generateAvatar(name, size) {
-        return createAvatar(style, {
-            seed: name || "seed",
-            size: size || 40,
-            backgroundColor: "#ABFD9E",
-            radius: 50,
-        });
-    }
-
-    async lookForSockets() {
-        const find = require("local-devices");
-        var localDevices = await find();
-
-        localDevices.forEach(async (device) => {
-            let result = await nodePortScanner(device.ip, [this.wsPort]);
-            if (
-                result.ports.open.includes(this.wsPort) &&
-                !this.localAdresses.includes(device.ip)
-            ) {
-                this.connectToSocket(device.ip);
+        switch (type) {
+            case Socket.SERVER: {
+                this.initServer();
+                break;
             }
-        });
-    }
-
-    connectToSocket(ip) {
-        console.log("Connecting to socket on [", ip, "]");
-        let socketAddress = "ws://" + ip + ":" + this.wsPort;
-        let socket = new WebSocket(socketAddress);
-        socket.on("open", () => {
-            console.log("Socket connected at [", ip, "]");
-            let message = JSON.stringify({ type: "request-info" });
-            socket.send(message);
-            this.listenToSocket(socket, ip);
-        });
-    }
-
-    listenToSocket(socket, ip) {
-        socket.on("message", (message) => {
-            message = JSON.parse(message);
-            switch (message.type) {
-                case "request-info":
-                    let data = {
-                        type: "socket-info",
-                        socket: {
-                            name: this.name,
-                        },
-                    };
-                    socket.send(JSON.stringify(data));
-                    break;
-                case "socket-info":
-                    let newSocket = {
-                        socket: socket,
-                        name: message.socket.name,
-                        ip: ip,
-                    };
-                    this.sockets.push(newSocket);
-                    break;
-                case "message":
-                    console.log(message.message);
+            case Socket.CLIENT: {
+                this.initClient();
+                break;
             }
-        });
-    }
 
-    listSockets() {
-        return this.sockets
-    }
-
-    getLocalAdresses() {
-        const localAdresses = [];
-        const nets = networkInterfaces();
-        for (const name of Object.keys(nets)) {
-            for (const net of nets[name]) {
-                // Ignore non-IPv4 and internal addresses
-                if (net.family === "IPv4" && !net.internal) {
-                    localAdresses.push(net.address);
-                }
+            default: {
+                throw new Error(
+                    "Incopatible type (",
+                    type,
+                    ") passed to Socket constructor"
+                );
             }
         }
-        return localAdresses;
     }
 
-    toString() {
-        let str = "Socket: " + this.name + "\n";
-        str += "ws port: " + this.wsPort + "\n";
-        str += "api port: " + this.apiPort + "\n";
-        return str;
+    initServer() {
+        console.log("Initializing Socket Server");
+        this.app = express();
+        this.app.use(express.json());
+        this.app.use(fileUpload());
+        try {
+            if (!fs.existsSync("./secret.key")) {
+                this.app.set("secret", randomUUID());
+                fs.writeFileSync("./secret.key", this.app.get("secret"));
+            } else {
+                this.app.set(
+                    "secret",
+                    fs.readFileSync("./secret.key", {
+                        encoding: "utf8",
+                        flag: "r",
+                    })
+                );
+            }
+            console.log(this.app.get("secret"));
+            this.app.use(bodyParser.urlencoded({ extended: true }));
+            this.app.listen(this.PORT, () => {
+                console.log("listening on port " + this.PORT);
+            });
+        } catch (exception) {
+            console.log(exception);
+            this.emit("error", {
+                type: "unaccessible-port",
+                message:
+                    "Could not initialize Socket Server on port " + this.PORT,
+            });
+        }
+
+        this.app.get("/connection", async (req, res) => {
+            let address =
+                req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+            console.log("Connection from " + address);
+            address = Socket.correctaddress(address);
+
+            if (!(await this.isSocket(address))) {
+                res.status(403).json({ message: "Only sockets can connect" });
+                return;
+            }
+
+            const payload = {
+                check: true,
+            };
+            const token = jwt.sign(payload, this.app.get("secret"), {
+                expiresIn: 1440,
+            });
+
+            res.json({
+                message: "Connection established",
+                token: token,
+            });
+        });
+
+        this.app.get("/", (req, res ) => {
+            res.json({isSocket: true});
+        })
     }
 
-    ipCorrect(ip) {
-        let aux = ip.split("");
+    initClient() {
+        console.log(
+            "Initializing Socket Client, trying to establish connection with " +
+                this.PORT
+        );
+    }
+
+    async connectToSocket(address) {
+        let url = "http://" + address + ":" + this.PORT;
+
+        if(this.getSocketByAddress(address) !== undefined) {
+            return
+        }
+        
+        try {
+            let response = await axios.get(url)
+            if(response.status !== 200) {
+                return
+            }
+            let token = response.data.token
+            let socket = new Socket({port: this.PORT, token: token})
+        } catch (e) {
+
+        }
+    }
+
+    getSocketByAddress(address) {
+        return this.sockets.find(function(socket) {
+            return socket.address === address
+        })
+    }
+
+    async isSocket(address) {
+        let url = "http://" + address + ":" + this.PORT + "/";
+        try {
+            let response = await axios.get(url);
+            if (response.data.isSocket) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (e) {
+            return false;
+        }
+    }
+
+    static correctAddress(address) {
+        let aux = address.split("");
         aux = aux.reverse();
         aux = aux.join("");
         let index = aux.indexOf(":");
-        let result = ip.slice(ip.length - index);
+        if (index === -1) {
+            return address;
+        }
+        let result = address.slice(aux.length - index);
+
         return result;
     }
 }
 
-function sleep(ms) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-    });
-}
+//Definición de constantes para Socket
+Object.defineProperty(Socket, "SERVER", {
+    value: "server",
+    writable: false,
+    enumerable: true,
+    configurable: false,
+});
+
+Object.defineProperty(Socket, "CLIENT", {
+    value: "client",
+    writable: false,
+    enumerable: true,
+    configurable: false,
+});
 
 module.exports = Socket;
