@@ -56,10 +56,14 @@ class Socket extends EventEmitter {
                     socket.PORT,
                 ]);
                 if (result.ports.closed.includes(socket.PORT)) {
-                    this.disconnect(socket);
+                    let confirm = await nodePortScanner(socket.address, [socket.PORT]);
+                    if(confirm.ports.closed.includes(socket.PORT)) {
+                        this.disconnect(socket);
+                    }                    
                 }
             });
         }
+        this.lookForSockets()
     }
 
     disconnect(socketToDelete) {
@@ -249,8 +253,8 @@ class Socket extends EventEmitter {
                 result.ports.open.includes(this.PORT) &&
                 !this.localAdresses.includes(device.ip)
             ) {
-                this.connectToSocket(device.ip);
-                await this.sleep(100);
+                await this.connectToSocket(device.ip);
+                // await this.sleep(100);
             }
         });
     }
@@ -275,33 +279,35 @@ class Socket extends EventEmitter {
     }
 
     async connectToSocket(address) {
-        if (this.getSocketByAddress(address) !== undefined) {
-            return;
-        }
-        let url = "http://" + address + ":" + this.PORT + "/connect";
-        try {
-            let response = await axios.get(url);
-            if (response.status !== 200) {
+        return new Promise(async (resolve, reject) => {
+            if (this.getSocketByAddress(address) !== undefined) {
                 return;
             }
-            let token = response.data.token;
-            let name = response.data.name;
-            let socket = new Socket({
-                port: this.PORT,
-                token: token,
-                address: address,
-                name: name,
-            });
-            this.sockets.push(socket);
-            console.log(
-                "[SOCKET] Socket " +
-                    socket.name +
-                    " [" +
-                    socket.address +
-                    "] connected."
-            );
-            this.emit("connection", socket);
-        } catch (e) {}
+            let url = "http://" + address + ":" + this.PORT + "/connect";
+            try {
+                let response = await axios.get(url);
+                if (response.status !== 200) {
+                    return;
+                }
+                let token = response.data.token;
+                let name = response.data.name;
+                let socket = new Socket({
+                    port: this.PORT,
+                    token: token,
+                    address: address,
+                    name: name,
+                });
+                this.sockets.push(socket);
+                console.log(
+                    "[SOCKET] Socket " +
+                        socket.name +
+                        " [" +
+                        socket.address +
+                        "] connected."
+                );
+                this.emit("connection", socket);
+            } catch (e) {}
+        })            
     }
 
     getSocketByAddress(address) {
