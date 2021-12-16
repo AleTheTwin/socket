@@ -166,19 +166,20 @@ class Socket extends EventEmitter {
         });
 
         this.app.post("/upload", (req, res) => {
+            console.log(req);
             let address =
                 req.headers["x-forwarded-for"] || req.socket.remoteAddress;
             address = Socket.correctAddress(address);
             let socket = this.getSocketByAddress(address);
 
-            let files = []
-            if(req.files.file.length == undefined) {
+            let files = [];
+            if (req.files.file.length == undefined) {
                 files.push(req.files.file);
             } else {
-                files = req.files.file
+                files = req.files.file;
             }
             this.emit("files-received", files, socket);
-            res.json({message: "Done"})
+            res.json({ message: "Done" });
         });
 
         //At the end of the initialization process start ping process
