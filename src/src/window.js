@@ -1,27 +1,8 @@
+
 function minimize() {
-    let url = "http://localhost:8080/minimize"
-    axios.get(url)
-    .then(function(response) {
-
-    })
-}
-
-function maximize() {
-    let url = "http://localhost:8080/maximize"
-    axios.get(url)
-    .then(function(response) {
-
-    })
+    ipcRenderer.invoke("minimize-window").then((result) => {});
 }
 
 function closeFrame() {
-    let url = "http://localhost:3000/close"
-    axios.get(url)
-    .then(function(response) {
-
-    })
-}
-
-function volver() {
-    window.open("index.html")
+    ipcRenderer.invoke("close-window").then((result) => {});
 }

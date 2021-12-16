@@ -8,6 +8,7 @@ const api = express()
 api.use(express.json())
 const port = process.env.PORT || 8080
 const path = require("path")
+var ipcMain = require('electron').ipcMain
 
 var frame 
 
@@ -39,44 +40,52 @@ async function createViewport() {
 
 app.on("ready", createViewport)
 
-api.listen(port, function() {
-    console.log("Module Express now listening...")
-})
-
-api.get("/minimize", function(request, response) {
+ipcMain.handle("minimize-window", () => {
     frame.minimize()
-    response.send({ 
-        success : true
-    })
 })
 
-api.get('/isBusy', function(request, response) {
-    response.send({isBusy : isBusy})
-})
-
-api.get("/close", function(request, response) {
+ipcMain.handle("close-window", () => {
     app.quit()
 })
 
-api.get("/maximize", function(request, response) {
-    if(!frame.fullScreen) {
-        frame.fullScreen = true
-    } else {
-        frame.fullScreen = false
-    }
-    response.send({
-        success: true
-    })
-})
+// api.listen(port, function() {
+//     console.log("Module Express now listening...")
+// })
 
-api.get("/selectFolder", async function(request, response) {
-    let folderPath = await selectFolder()
-    let data = {
-        success : folderPath !== false ? true : false,
-        path: folderPath
-    }
-    response.send(data)
-})
+// api.get("/minimize", function(request, response) {
+//     frame.minimize()
+//     response.send({ 
+//         success : true
+//     })
+// })
+
+// api.get('/isBusy', function(request, response) {
+//     response.send({isBusy : isBusy})
+// })
+
+// api.get("/close", function(request, response) {
+//     app.quit()
+// })
+
+// api.get("/maximize", function(request, response) {
+//     if(!frame.fullScreen) {
+//         frame.fullScreen = true
+//     } else {
+//         frame.fullScreen = false
+//     }
+//     response.send({
+//         success: true
+//     })
+// })
+
+// api.get("/selectFolder", async function(request, response) {
+//     let folderPath = await selectFolder()
+//     let data = {
+//         success : folderPath !== false ? true : false,
+//         path: folderPath
+//     }
+//     response.send(data)
+// })
 
 async function selectFolder() {
     var directorio = await  dialog.showOpenDialog({
