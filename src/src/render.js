@@ -69,10 +69,9 @@ function $(id) {
 }
 
 function sendFile() {
-    let frame = document.createElement("iframe")
-    $("frame").appendChild(frame);
-    frame.id = randomUUID()
-    frame.appendChild($("file-form"));
+    let uuid = randomUUID()
+    render(Div(uuid), "frame")
+    $(uuid).appendChild($("file-form"));
     $("file-form").appendChild(HiddenInput("uuid", frame.id));
     render(SendingFileMessage(), "select-container", true)
     $("file-form").submit();
