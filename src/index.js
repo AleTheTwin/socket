@@ -43,7 +43,7 @@ ipcMain.handle("send-file", async (eve, files, address, port, uuid) => {
     let url = "http://" + address + ":" + port + "/upload";
     let formData = new FormData();
     for (let i = 0; i < files.length; i++) {
-        let buff = fs.createReadStream(files[i].path, { highWaterMark: 64 });
+        let buff = fs.createReadStream(files[i].path, { highWaterMark: 1024 * 1024 * 200 });
         formData.append("file", buff, files[i].name);
     }
 

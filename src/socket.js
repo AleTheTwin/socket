@@ -84,9 +84,11 @@ class Socket extends EventEmitter {
 
     initServer() {
         console.log("[SOCKET] Initializing Socket Server");
+        const maxFileSize = 1024 * 1024 * 5
         this.app = express();
         this.app.use(express.json());
-        this.app.use(fileUpload());
+        const multer  = require('multer')
+        const upload = multer({ limits: { fileSize:  maxFileSize}  })
         try {
             if (!fs.existsSync("./secret.key")) {
                 this.app.set("secret", randomUUID());
@@ -170,7 +172,7 @@ class Socket extends EventEmitter {
             this.disconnect(socket);
         });
 
-        this.app.post("/upload", (req, res) => {
+        this.app.post("/upload", upload.single('file'), (req, res) => {
             let address =
                 req.headers["x-forwarded-for"] || req.socket.remoteAddress;
             address = Socket.correctAddress(address);
