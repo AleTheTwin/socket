@@ -231,10 +231,17 @@ class Socket extends EventEmitter {
         let localDevices = await find();
         localDevices.forEach(async (device) => {
             let result = await nodePortScanner(device.ip, [this.PORT]);
-            if (result.ports.open.includes(this.PORT)) {
+            if (result.ports.open.includes(this.PORT) && !(this.localAdresses.includes(device.ip))) {
                 this.connectToSocket(device.ip);
+                await this.sleep(100);
             }
         });
+    }
+
+    sleep(ms) {
+        return new Promise((resolve) => {
+            setTimeout(resolve, ms);
+        })
     }
 
     getLocalAddresses() {

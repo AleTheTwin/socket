@@ -37,6 +37,7 @@ async function main() {
 
     socketServer.on("files-sent", (socket, uuid) => {
         showSentConfirmation(socket)
+        $(uuid).parentElement.removeChild($(uuid));
     })
 }
 
