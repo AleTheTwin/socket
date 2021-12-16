@@ -181,7 +181,7 @@ class Socket extends EventEmitter {
             res.json({ message: "Done" });
         });
 
-        this.app.post("/recievedConfirmation", (req, res) => {
+        this.app.post("/confirmFileRecieved", (req, res) => {
             let address =
                 req.headers["x-forwarded-for"] || req.socket.remoteAddress;
             address = Socket.correctAddress(address);
