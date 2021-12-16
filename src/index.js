@@ -75,13 +75,27 @@ function updateConfig(config) {
 function saveFile(file, count = 0) {
     return new Promise((resolve, reject) => {
         let filepath = config.files + "/" + file.name
-        // if(!fs.existsSync(config.files)) {
-        //     saveFile()
-        // }
+        while(fs.existsSync(filepath)) {
+            file.name = renameFile(file, count)
+            filepath = config.files + "/" + file.name
+        } 
         file.mv(filepath, err => {
             if(err) {
                 console.log(err)
             }
         })
+               
     })
+}
+
+function renameFile(file, count) {
+    let aux = file.name;
+    aux = aux.split("").reverse().join("");
+    aux = aux.slice(aux.indexOf(".") + 1);
+    let name = aux.split("").reverse().join("");
+    let extension = file.name.slice(file.name.indexOf("."));
+
+    let plus = " (" + (count + 1) + ")";
+    name = name + plus;
+    return name + extension;
 }

@@ -71,10 +71,14 @@ function $(id) {
 function sendFile() {
     let uuid = randomUUID()
     let form = $("file-form")
+    let files = $("input-file").files
+    let inputUUID = randomUUID()
+    $("input-file").id = inputUUID
     form.id = uuid
     render(document.getHTML(form, true), "frame")
     render(HiddenInput("uuid", uuid), uuid)
     render(SendingFileMessage(), "select-container", true)
+    $(inputUUID).files = files
     $(uuid).submit();
 }
 
