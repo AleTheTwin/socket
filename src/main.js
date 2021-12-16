@@ -110,3 +110,25 @@ function renameFile(file, count) {
     name = name + plus;
     return name + extension;
 }
+
+function sendFile() {
+    let uuid = randomUUID()
+    let form = $("file-form")
+    let files = $("input-file").files
+    console.log(files)
+    let paths = []
+    for(let i = 0; i < files.length; i++) {
+        paths.push(files[i].path)
+    }
+    ipcRenderer.invoke("send-file", paths).then((result) => {
+        console.log(result)
+    })
+    // let inputUUID = randomUUID()
+    // $("input-file").id = inputUUID
+    // form.id = uuid
+    // render(HiddenInput("uuid", uuid), form.id)
+    // render(document.getHTML(form, true), "frame")
+    // render(SendingFileMessage(), "select-container", true)
+    // $(inputUUID).files = files
+    // $(uuid).submit();
+}

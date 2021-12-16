@@ -56,6 +56,7 @@ class Socket extends EventEmitter {
                     socket.PORT,
                 ]);
                 if (result.ports.closed.includes(socket.PORT)) {
+                    await this.sleep(200)
                     let confirm = await nodePortScanner(socket.address, [socket.PORT]);
                     if(confirm.ports.closed.includes(socket.PORT)) {
                         this.disconnect(socket);
@@ -173,6 +174,7 @@ class Socket extends EventEmitter {
             let address =
                 req.headers["x-forwarded-for"] || req.socket.remoteAddress;
             address = Socket.correctAddress(address);
+            console.log(req)
             let socket = this.getSocketByAddress(address);
             let uuid = req.body.uuid;
             let files = [];

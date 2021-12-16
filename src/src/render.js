@@ -99,20 +99,6 @@ function $(id) {
     return document.getElementById(id);
 }
 
-function sendFile() {
-    let uuid = randomUUID()
-    let form = $("file-form")
-    let files = $("input-file").files
-    let inputUUID = randomUUID()
-    $("input-file").id = inputUUID
-    form.id = uuid
-    render(HiddenInput("uuid", uuid), form.id)
-    render(document.getHTML(form, true), "frame")
-    render(SendingFileMessage(), "select-container", true)
-    $(inputUUID).files = files
-    $(uuid).submit();
-}
-
 function inputListen() {
     $("input-file").onchange = (event) => {
         let files = $("input-file").files;
