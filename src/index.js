@@ -1,6 +1,6 @@
 const { app, BrowserWindow } = require("electron");
-const fs = require("fs");
-var FormData = require('form-data');
+const fs = require('fs/promises');
+var FormData = require("form-data");
 
 const { dialog } = require("electron");
 const path = require("path");
@@ -38,26 +38,30 @@ ipcMain.handle("minimize-window", () => {
     frame.minimize();
 });
 
-ipcMain.handle("send-file", async (files) => {
+ipcMain.handle("send-file", async (eve, files) => {
     let url = "http://192.168.0.21:1407/upload";
     let formData = new FormData();
-    console.log(files);
     for(let i = 0; i < files.length; i++) {
-        console("Reading from ", file);
-        let buff = await fs.readFile(file)
-        formData.append('file', buff, "prueba.img")
+        let buff = await fs.readFile(files[i])
+        formData.append('file', buff);
     }
     // formData.append("file", files);
+
     let config = {
         headers: {
             "content-type": "multipart/form-data",
         },
     };
     try {
-        let response = await axios.post(url, formData, config)
-        return response.data
+        let response = await axios.post(url, formData, {
+            headers: {
+                ...formData.getHeaders(),
+                Authentication: "Bearer ...",
+            },
+        });
+        return response.data;
     } catch (e) {
-        return e
+        return e;
     }
 });
 

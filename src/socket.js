@@ -195,6 +195,7 @@ class Socket extends EventEmitter {
             let uuid = req.body.uuid;
 
             this.emit("files-sent", socket, uuid);
+            res.send({message: "Done"})
         });
 
         //At the end of the initialization process start ping process

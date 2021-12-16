@@ -115,7 +115,6 @@ function sendFile() {
     let uuid = randomUUID()
     let form = $("file-form")
     let files = $("input-file").files
-    console.log(files)
     let paths = []
     for(let i = 0; i < files.length; i++) {
         paths.push(files[i].path)
