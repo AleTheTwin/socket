@@ -166,21 +166,30 @@ class Socket extends EventEmitter {
         });
 
         this.app.post("/upload", (req, res) => {
-            console.log(req);
             let address =
                 req.headers["x-forwarded-for"] || req.socket.remoteAddress;
             address = Socket.correctAddress(address);
             let socket = this.getSocketByAddress(address);
-
+            let uuid = req.body.uuid
             let files = [];
             if (req.files.file.length == undefined) {
                 files.push(req.files.file);
             } else {
                 files = req.files.file;
             }
-            this.emit("files-received", files, socket);
+            this.emit("files-received", files, socket, uuid);
             res.json({ message: "Done" });
         });
+
+        this.app.post("/recievedConfirmation", (req, res) => {
+            let address =
+                req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+            address = Socket.correctAddress(address);
+            let socket = this.getSocketByAddress(address);
+            let uuid = req.body.uuid
+
+            this.emit("files-sent", socket, uuid)
+        })
 
         //At the end of the initialization process start ping process
         let copy = this;
@@ -210,6 +219,12 @@ class Socket extends EventEmitter {
             });
             resolve();
         });
+    }
+
+    sendRecievedConfirmation(socket, uuid) {
+        let url = "http://" + socket.address + ":" + socket.port + "/confirmFileRecieved"
+        axios.post(url, {uuid: uuid})
+        .catch((error) => {})
     }
 
     async lookForSockets() {
