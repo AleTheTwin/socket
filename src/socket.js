@@ -51,7 +51,6 @@ class Socket extends EventEmitter {
     }
 
     ping() {
-        console.log("[SERVER] Looking for dead sockets.");
         if (this.sockets.length !== 0) {
             this.sockets.forEach(async (socket) => {
                 let result = await nodePortScanner(socket.address, [
@@ -72,6 +71,7 @@ class Socket extends EventEmitter {
                 socketToDelete.address +
                 "] disconnected"
         );
+        this.emit("disconnection", socketToDelete);
         let aux = this.sockets.filter((socket) => {
             socket.address != socketToDelete.address;
         });
@@ -79,7 +79,7 @@ class Socket extends EventEmitter {
     }
 
     initServer() {
-        console.log("Initializing Socket Server");
+        console.log("[Main] Initializing Socket Server");
         this.app = express();
         this.app.use(express.json());
         this.app.use(fileUpload());
@@ -98,10 +98,9 @@ class Socket extends EventEmitter {
             }
             this.app.use(bodyParser.urlencoded({ extended: true }));
             this.app.listen(this.PORT, () => {
-                console.log("[SERVER] listening on port " + this.PORT + "\n");
+                console.log("[SERVER] listening on port " + this.PORT);
             });
         } catch (exception) {
-            console.log(exception);
             this.emit("error", {
                 type: "unaccessible-port",
                 message:
@@ -114,20 +113,12 @@ class Socket extends EventEmitter {
                 req.headers["x-forwarded-for"] || req.socket.remoteAddress;
             address = Socket.correctAddress(address);
             if (this.getSocketByAddress(address) === undefined) {
-                console.log("[SERVER] Connection from " + address);
             }
 
             if (!(await this.isSocket(address))) {
-                console.log(
-                    "[SERVER] Connection refused to " +
-                        address +
-                        ". No Socket found."
-                );
                 res.status(403).json({ message: "Only sockets can connect" });
                 return;
             }
-            console.log("[SERVER] Connection accepted.");
-            console.log("[SERVER] Pairing with Socket at 192.168.0.21.");
             this.connectToSocket(address);
             const payload = {
                 check: true,
@@ -207,6 +198,7 @@ class Socket extends EventEmitter {
                     socket.address +
                     "] connected."
             );
+            this.emit('connection', socket);
         } catch (e) {}
     }
 
