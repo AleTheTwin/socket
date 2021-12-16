@@ -63,7 +63,7 @@ function SelectionBox(address, port) {
         <label class="btn" for="input-file">Select file 📁</label>\
     </form>\
     </div>\
-    <div class="device-info btn btn-send" onclick="sendFile()">\
+    <div class="device-info btn btn-send" onclick="sendFile(' + "'" + address + "','" + port + "'" + ')">\
         <div class="info info-card">\
             <h1>Send file</h1>\
         </div>\

@@ -38,7 +38,7 @@ async function main() {
 
     socketServer.on("files-sent", (socket, uuid) => {
         showSentConfirmation(socket)
-        $(uuid).parentElement.removeChild($(uuid));
+        // $(uuid).parentElement.removeChild($(uuid));
     })
 }
 
@@ -111,7 +111,7 @@ function renameFile(file, count) {
     return name + extension;
 }
 
-function sendFile() {
+function sendFile(address, port) {
     let uuid = randomUUID()
     let form = $("file-form")
     let files = $("input-file").files
@@ -127,7 +127,7 @@ function sendFile() {
     render(SendingFileMessage(), "select-container", true)
     $(inputUUID).files = files
     // $(uuid).submit();
-    ipcRenderer.invoke("send-file", paths).then((result) => {
+    ipcRenderer.invoke("send-file", paths, address, port, uuid).then((result) => {
         console.log(result)
     })
 }

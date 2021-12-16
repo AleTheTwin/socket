@@ -1,5 +1,5 @@
 const { app, BrowserWindow } = require("electron");
-const fs = require('fs/promises');
+const fs = require("fs/promises");
 var FormData = require("form-data");
 
 const { dialog } = require("electron");
@@ -38,14 +38,14 @@ ipcMain.handle("minimize-window", () => {
     frame.minimize();
 });
 
-ipcMain.handle("send-file", async (eve, files) => {
-    let url = "http://192.168.0.21:1407/upload";
+ipcMain.handle("send-file", async (eve, files, address, port, uuid) => {
+    let url = "http://" + address + ":" + port + "/upload";
     let formData = new FormData();
-    for(let i = 0; i < files.length; i++) {
-        let buff = await fs.readFile(files[i])
-        formData.append('file', buff);
+    for (let i = 0; i < files.length; i++) {
+        let buff = await fs.readFile(files[i]);
+        formData.append("file", buff);
     }
-    // formData.append("file", files);
+    formData.append("uuid", uuid);
 
     let config = {
         headers: {
