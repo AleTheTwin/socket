@@ -27,10 +27,11 @@ async function main() {
         );
     });
 
-    socketServer.on("files-received", (files) => {
+    socketServer.on("files-received", (files, socket) => {
         files.forEach(async file => {
             await saveFile(file)
         })
+        socket.sendConfirmation()
     })
 }
 
