@@ -13,5 +13,5 @@ socketServer.on("connection", (socket) => {
 });
 
 socketServer.on("disconnection", (disconnectedSocket) => {
-    derender(disconnectedSocket.name + "-card");
+    derender(disconnectedSocket.name + disconnectedSocket.address + "-card");
 });
