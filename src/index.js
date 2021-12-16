@@ -13,6 +13,7 @@ async function main() {
     await validateConfig();
     socketServer.PORT = config.port;
     socketServer.initServer();
+    socketServer.lookForSockets();
 
     window.onload = renderData(socketServer);
 

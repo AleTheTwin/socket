@@ -2,6 +2,10 @@ function SearchMessage() {
     return '<p class="searching">Searching for sockets...</p>';
 }
 
+function SendingFileMessage() {
+    return '<p>Sending File 📤</p>'
+}
+
 function SocketCard(socket) {
     return '\
     <div class="device-card" id="' + socket.name + socket.address + '-card">\

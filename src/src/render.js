@@ -67,6 +67,12 @@ function $(id) {
     return document.getElementById(id);
 }
 
+function sendFile() {
+    $("frame").appendChild($("file-form"));
+    render(SendingFileMessage(), "select-container", true)
+    $("file-form").submit();
+}
+
 function inputListen() {
     $("input-file").onchange = (event) => {
         let files = $("input-file").files;

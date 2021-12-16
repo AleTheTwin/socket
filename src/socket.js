@@ -165,7 +165,7 @@ class Socket extends EventEmitter {
             this.disconnect(socket);
         });
 
-        this.app.get("/upload", protectedRoutes, (req, res) => {
+        this.app.get("/upload", (req, res) => {
             let address =
                 req.headers["x-forwarded-for"] || req.socket.remoteAddress;
             address = Socket.correctAddress(address);
@@ -183,8 +183,6 @@ class Socket extends EventEmitter {
         //At the end of the initialization process start ping process
         let copy = this;
         setInterval(this.ping.bind(this), 5000);
-        this.lookForSockets()
-        setInterval(this.lookForSockets.bind(this), 60000);
     }
 
     initClient() {
