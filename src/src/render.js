@@ -48,6 +48,7 @@ async function showSentConfirmation(socket) {
     }
     let frame = Frame(SocketCardNoButton(socket.name, socket.address));
     render(frame, "modal-content");
+    openModal()
     await sleep(750);
     $('select-container').classList.add("select-file-space");
     await sleep(750);
@@ -60,6 +61,7 @@ async function showReceivedConfirmation(socket) {
     }
     let frame = Frame(SocketCardNoButton(socket.name, socket.address));
     render(frame, "modal-content");
+    openModal()
     await sleep(750);
     $('select-container').classList.add("select-file-space");
     await sleep(750);
