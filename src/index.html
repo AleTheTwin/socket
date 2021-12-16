@@ -30,18 +30,22 @@
                     <div class="avatar" id="device-avatar"></div>
                 </div>
             </div>
-            <script src="src/qrcode.js"></script>
+            <!-- <script src="src/qrcode.js"></script>
             <div  class="qr-container">
                 <p>Scan the following qr code from this <a href="download-shortcut.html" target="_blank">iOS Shortcut</a></p>
-                <!-- <p>Send from this <a class="btn" onclick="downloadWindow()">iOS Shortcut</a></p> -->
                 <div id="qrcode"></div>
+            </div> -->
+            <div class="btn-settings-container">
+                <div onclick="openFilesFolder()" class="btn btn-settings">
+                    <h1 >Files </h1> 
+                    <h1 class="">📂</h1>
+                </div>      
             </div>
             <div class="btn-settings-container">
                 <div class="btn btn-settings">
                     <h1 >Settings </h1> 
                     <h1 class="gear">⚙️</h1>
-                </div>
-                           
+                </div>      
             </div>
         </section>
 
@@ -103,6 +107,7 @@
         
         <iframe id="frame" class="visually-hidden" name="frame"></iframe>
     </div>
+    <script src="src/components.js"></script>
     <script src="src/render.js"></script>
     <script src="index.js"></script>
     <script src="src/window.js"></script>

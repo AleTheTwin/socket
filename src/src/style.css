@@ -131,6 +131,7 @@ h1:hover ~ .gear {
 
 .info small {
     font-size: 12px;
+    margin-left: 10px;
 }
 
 .avatar {

@@ -28,7 +28,7 @@ class Socket extends EventEmitter {
                 this.localAdresses = this.getLocalAddresses();
                 this.sockets = [];
                 this.name = os.hostname();
-                this.initServer();
+                // this.initServer();
                 break;
             }
             case Socket.CLIENT: {
