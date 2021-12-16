@@ -165,7 +165,7 @@ class Socket extends EventEmitter {
             this.disconnect(socket);
         });
 
-        this.app.get("/upload", (req, res) => {
+        this.app.post("/upload", (req, res) => {
             let address =
                 req.headers["x-forwarded-for"] || req.socket.remoteAddress;
             address = Socket.correctAddress(address);
