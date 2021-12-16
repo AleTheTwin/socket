@@ -3,11 +3,6 @@ function minimize() {
 }
 
 async function closeFrame() {
-    try {
-        await socketServer.stop();
-        ipcRenderer.invoke("close-window").then((result) => {});
-    } catch (e) {
-        console.log(e);
-    }
-    
+    await socketServer.stop();    
+    ipcRenderer.invoke("close-window").then((result) => {});
 }

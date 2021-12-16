@@ -158,7 +158,7 @@ class Socket extends EventEmitter {
         });
 
         this.app.get("/disconnect", protectedRoutes, (req, res) => {
-            console.log(req.headers['access-token'])
+            console.log(req.headers["access-token"]);
             let address =
                 req.headers["x-forwarded-for"] || req.socket.remoteAddress;
             address = Socket.correctAddress(address);
@@ -184,12 +184,13 @@ class Socket extends EventEmitter {
                     ":" +
                     this.PORT +
                     "/disconnect";
+                let headers = {
+                    "access-token": socket.token,
+                };
                 axios
-                    .get(url)
+                    .get(url, { headers: headers })
                     .then((response) => {})
-                    .catch((error) => {
-                        reject(error);
-                    });
+                    .catch((error) => {});
             });
             resolve();
         });
