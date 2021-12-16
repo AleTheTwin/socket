@@ -3,10 +3,6 @@ const express = require('express')
 const fs = require('fs');
 
 const {dialog} = require('electron');
-
-const api = express()
-api.use(express.json())
-const port = process.env.PORT || 8080
 const path = require("path")
 var ipcMain = require('electron').ipcMain
 
@@ -48,45 +44,6 @@ ipcMain.handle("close-window", () => {
     app.quit()
 })
 
-// api.listen(port, function() {
-//     console.log("Module Express now listening...")
-// })
-
-// api.get("/minimize", function(request, response) {
-//     frame.minimize()
-//     response.send({ 
-//         success : true
-//     })
-// })
-
-// api.get('/isBusy', function(request, response) {
-//     response.send({isBusy : isBusy})
-// })
-
-// api.get("/close", function(request, response) {
-//     app.quit()
-// })
-
-// api.get("/maximize", function(request, response) {
-//     if(!frame.fullScreen) {
-//         frame.fullScreen = true
-//     } else {
-//         frame.fullScreen = false
-//     }
-//     response.send({
-//         success: true
-//     })
-// })
-
-// api.get("/selectFolder", async function(request, response) {
-//     let folderPath = await selectFolder()
-//     let data = {
-//         success : folderPath !== false ? true : false,
-//         path: folderPath
-//     }
-//     response.send(data)
-// })
-
 async function selectFolder() {
     var directorio = await  dialog.showOpenDialog({
         properties: ['openDirectory']
@@ -94,10 +51,6 @@ async function selectFolder() {
     directorio = directorio.canceled ? undefined : path.resolve(directorio.filePaths[0]).replace(/\\/g, "/")
     return directorio !== undefined ? directorio : false
 }
-
-api.get('/downloadWindow', async function() {
-    createDownloadWindow()
-})
 
 async function createDownloadWindow() {
     let downloadFrame = new BrowserWindow({

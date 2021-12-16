@@ -1,16 +1,17 @@
 const Socket = require("./socket");
+const { shell } = require("electron");
 const ipcRenderer = require("electron").ipcRenderer;
 
-const socket = new Socket({ port: 1407 }, Socket.SERVER);
-socket.lookForSockets();
+const socketServer = new Socket({ port: 1407 }, Socket.SERVER);
+socketServer.lookForSockets();
 
-window.onload = renderData(socket);
+window.onload = renderData(socketServer);
 
-socket.on("connection", (socket) => {
+socketServer.on("connection", (socket) => {
     let card = SocketCard(socket);
     render(card, "device-container");
 });
 
-socket.on("disconnection", (disconnectedSocket) => {
+socketServer.on("disconnection", (disconnectedSocket) => {
     derender(disconnectedSocket.name + "-card");
 });

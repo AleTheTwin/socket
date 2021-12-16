@@ -1,7 +1,6 @@
 "use strict";
 const EventEmitter = require("events");
 const fs = require("fs");
-const { shell } = require("electron");
 const { default: axios } = require("axios");
 const express = require("express");
 const fileUpload = require("express-fileupload");
@@ -138,15 +137,39 @@ class Socket extends EventEmitter {
             res.json({ isSocket: true });
         });
 
+        this.app.get("/disconnect", (req, res) => {
+            let address =
+                req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+            address = Socket.correctAddress(address);
+            let socket = this.getSocketByAddress(address);
+            this.disconnect(socket);
+        });
+
         //At the end of the initialization process start ping process
         let copy = this;
-        try {
-            setInterval(this.ping.bind(this), 10000);
-        } catch (e) {}
+        setInterval(this.ping.bind(this), 3000);
     }
 
     initClient() {
         // console.log("[SERVER] Initializing Socket Client");
+    }
+
+    stop() {
+        return new Promise((resolve, reject) => {
+            this.sockets.forEach((socket) => {
+                let url =
+                    "http://" +
+                    socket.address +
+                    ":" +
+                    this.PORT +
+                    "/disconnect";
+                axios
+                    .get(url)
+                    .then((response) => {})
+                    .catch((error) => {});
+            });
+            resolve()
+        });
     }
 
     async lookForSockets() {
@@ -198,7 +221,7 @@ class Socket extends EventEmitter {
                     socket.address +
                     "] connected."
             );
-            this.emit('connection', socket);
+            this.emit("connection", socket);
         } catch (e) {}
     }
 
