@@ -137,7 +137,27 @@ class Socket extends EventEmitter {
             res.json({ isSocket: true });
         });
 
-        this.app.get("/disconnect", (req, res) => {
+        const protectedRoutes = express.Router();
+        protectedRoutes.use((req, res, next) => {
+            const token = req.headers["access-token"];
+
+            if (token) {
+                jwt.verify(token, this.app.get("secret"), (err, decoded) => {
+                    if (err) {
+                        return res
+                            .status(403)
+                            .json({ message: "Invalid access token" });
+                    } else {
+                        req.decoded = decoded;
+                        next();
+                    }
+                });
+            } else {
+                res.status(403).json({ message: "No token provided" });
+            }
+        });
+
+        this.app.get("/disconnect", protectedRoutes, (req, res) => {
             let address =
                 req.headers["x-forwarded-for"] || req.socket.remoteAddress;
             address = Socket.correctAddress(address);
@@ -147,7 +167,7 @@ class Socket extends EventEmitter {
 
         //At the end of the initialization process start ping process
         let copy = this;
-        setInterval(this.ping.bind(this), 3000);
+        setInterval(this.ping.bind(this), 5000);
     }
 
     initClient() {
@@ -166,9 +186,11 @@ class Socket extends EventEmitter {
                 axios
                     .get(url)
                     .then((response) => {})
-                    .catch((error) => {});
+                    .catch((error) => {
+                        reject(error);
+                    });
             });
-            resolve()
+            resolve();
         });
     }
 
