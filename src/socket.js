@@ -238,6 +238,7 @@ class Socket extends EventEmitter {
                 aux.push(device);
             }
         })
+        
         localDevices.forEach(async (device) => {
             let result = await nodePortScanner(device.ip, [this.PORT]);
             if (result.ports.open.includes(this.PORT) && !(this.localAdresses.includes(device.ip))) {
