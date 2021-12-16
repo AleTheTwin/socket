@@ -51,23 +51,31 @@ class Socket extends EventEmitter {
     }
 
     ping() {
-        console.log("[SERVER] Looking for dead sockets.")
-        if(this.sockets.length !== 0) {
-            this.sockets.forEach(async socket => {
-                let result = await nodePortScanner(socket.address, [socket.PORT]);
-                console.log(result.ports);
-                if(result.ports.closed.includes(socket.PORT)){
-                    this.disconnect(socket)
+        console.log("[SERVER] Looking for dead sockets.");
+        if (this.sockets.length !== 0) {
+            this.sockets.forEach(async (socket) => {
+                let result = await nodePortScanner(socket.address, [
+                    socket.PORT,
+                ]);
+                if (result.ports.closed.includes(socket.PORT)) {
+                    this.disconnect(socket);
                 }
-            })
-        }        
+            });
+        }
     }
 
     disconnect(socketToDelete) {
-        console.log("[SERVER] Socket " + socketToDelete.name + " [" + socketToDelete.address + "] disconnected")
-        this.sockets.filter(socket => {
-            socket.address != socketToDelete.address 
-        })
+        console.log(
+            "[SERVER] Socket " +
+                socketToDelete.name +
+                " [" +
+                socketToDelete.address +
+                "] disconnected"
+        );
+        let aux = this.sockets.filter((socket) => {
+            socket.address != socketToDelete.address;
+        });
+        this.sockets = aux;
     }
 
     initServer() {
@@ -140,8 +148,10 @@ class Socket extends EventEmitter {
         });
 
         //At the end of the initialization process start ping process
-        let copy = this
-        try {setInterval(this.ping.bind(this), 10000)} catch (e) {}
+        let copy = this;
+        try {
+            setInterval(this.ping.bind(this), 10000);
+        } catch (e) {}
     }
 
     initClient() {
