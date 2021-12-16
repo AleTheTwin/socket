@@ -43,7 +43,11 @@ async function openSendFrame(name, address, port) {
 }
 
 async function showSentConfirmation(socket) {
+    if(modalIsOpen()) {
+        closeModal();
+    }
     let frame = Frame(SocketCardNoButton(socket.name, socket.address));
+    render(frame, "modal-content");
     await sleep(750);
     $('select-container').classList.add("select-file-space");
     await sleep(750);
@@ -51,7 +55,11 @@ async function showSentConfirmation(socket) {
 }
 
 async function showReceivedConfirmation(socket) {
+    if(modalIsOpen()) {
+        closeModal();
+    }
     let frame = Frame(SocketCardNoButton(socket.name, socket.address));
+    render(frame, "modal-content");
     await sleep(750);
     $('select-container').classList.add("select-file-space");
     await sleep(750);
@@ -65,6 +73,10 @@ function closeModal() {
     modalShadow.classList.remove("modal-shadow");
     let modalContainer = $("modal-content");
     modalContainer.innerHTML = "";
+}
+
+function modalIsOpen() {
+    return !($("modal").classList.includes("visually-hidden"));
 }
 
 function openModal() {
