@@ -64,7 +64,7 @@ class Socket extends EventEmitter {
 
     disconnect(socketToDelete) {
         console.log(
-            "[SERVER] Socket " +
+            "[SOCKET] Socket " +
                 socketToDelete.name +
                 " [" +
                 socketToDelete.address +
@@ -78,7 +78,7 @@ class Socket extends EventEmitter {
     }
 
     initServer() {
-        console.log("[Main] Initializing Socket Server");
+        console.log("[SOCKET] Initializing Socket Server");
         this.app = express();
         this.app.use(express.json());
         this.app.use(fileUpload());
@@ -97,7 +97,7 @@ class Socket extends EventEmitter {
             }
             this.app.use(bodyParser.urlencoded({ extended: true }));
             this.app.listen(this.PORT, () => {
-                console.log("[SERVER] listening on port " + this.PORT);
+                console.log("[SOCKET] listening on port " + this.PORT);
             });
         } catch (exception) {
             this.emit("error", {
@@ -270,7 +270,7 @@ class Socket extends EventEmitter {
             });
             this.sockets.push(socket);
             console.log(
-                "[SERVER] Socket " +
+                "[SOCKET] Socket " +
                     socket.name +
                     " [" +
                     socket.address +
