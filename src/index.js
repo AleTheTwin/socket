@@ -75,9 +75,12 @@ function updateConfig(config) {
 function saveFile(file, count = 0) {
     return new Promise((resolve, reject) => {
         let filepath = config.files + "/" + file.name
+        let aux
         while(fs.existsSync(filepath)) {
-            file.name = renameFile(file, count)
-            filepath = config.files + "/" + file.name
+            aux = file.name
+            aux = renameFile(file, count)
+            filepath = config.files + "/" + aux
+            count++;
         } 
         file.mv(filepath, err => {
             if(err) {
