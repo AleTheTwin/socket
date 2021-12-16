@@ -222,7 +222,9 @@ class Socket extends EventEmitter {
     }
 
     sendRecievedConfirmation(socket, uuid) {
-        let url = "http://" + socket.address + ":" + socket.port + "/confirmFileRecieved"
+        console.log("sendRecievedConfirmation")
+        let url = "http://" + socket.address + ":" + socket.PORT + "/confirmFileRecieved"
+        console.log(url)
         axios.post(url, {uuid: uuid})
         .catch((error) => {})
     }
