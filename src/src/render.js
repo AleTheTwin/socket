@@ -70,11 +70,12 @@ function $(id) {
 
 function sendFile() {
     let uuid = randomUUID()
-    render(Div(uuid), "frame")
-    $(uuid).appendChild($("file-form"));
-    $("file-form").appendChild(HiddenInput("uuid", frame.id));
+    let form = $("file-form")
+    form.id = uuid
+    render(document.getHTML(form, true), "frame")
+    render(HiddenInput("uuid", uuid), uuid)
     render(SendingFileMessage(), "select-container", true)
-    $("file-form").submit();
+    $(uuid).submit();
 }
 
 function inputListen() {
@@ -130,4 +131,17 @@ function inputListen() {
         }
         render(contentLabel, "path-to-file", true);
     };
+}
+
+document.getHTML= function(who, deep){
+    if(!who || !who.tagName) return '';
+    var txt, ax, el= document.createElement("div");
+    el.appendChild(who.cloneNode(false));
+    txt= el.innerHTML;
+    if(deep){
+        ax= txt.indexOf('>')+1;
+        txt= txt.substring(0, ax)+who.innerHTML+ txt.substring(ax);
+    }
+    el= null;
+    return txt;
 }
