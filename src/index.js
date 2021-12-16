@@ -3,6 +3,7 @@ const { shell } = require("electron");
 const ipcRenderer = require("electron").ipcRenderer;
 const fs = require("fs");
 const { getDownloadsFolder } = require("platform-folders");
+const { saveBufferToFile } = require("express-fileupload/lib/utilities");
 const socketServer = new Socket({ port: 1234 }, Socket.SERVER);
 
 var config 
@@ -12,8 +13,6 @@ async function main() {
     await validateConfig();
     socketServer.PORT = config.port;
     socketServer.initServer();
-
-    socketServer.lookForSockets();
 
     window.onload = renderData(socketServer);
 
@@ -27,6 +26,12 @@ async function main() {
             disconnectedSocket.name + disconnectedSocket.address + "-card"
         );
     });
+
+    socketServer.on("files-received", (files) => {
+        files.forEach(async file => {
+            await saveFile(file)
+        })
+    })
 }
 
 function openFilesFolder() {
@@ -65,4 +70,18 @@ function validateConfig() {
 
 function updateConfig(config) {
     fs.writeFileSync("./src/config.json", JSON.stringify(config));
+}
+
+function saveFile(file, count = 0) {
+    return new Promise((resolve, reject) => {
+        let filepath = config.files + "/" + file.name
+        // if(!fs.existsSync(config.files)) {
+        //     saveFile()
+        // }
+        file.mv(filepath, err => {
+            if(err) {
+                console.log(err)
+            }
+        })
+    })
 }

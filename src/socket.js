@@ -165,9 +165,25 @@ class Socket extends EventEmitter {
             this.disconnect(socket);
         });
 
+        this.app.get("/upload", protectedRoutes, (req, res) => {
+            let address =
+                req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+            address = Socket.correctAddress(address);
+            let socket = this.getSocketByAddress(address);
+
+            let files = []
+            if(req.files.file.length == undefined) {
+                files.push(req.files.file);
+            } else {
+                files = req.files.file
+            }
+            this.emit("files-received", files)
+        });
+
         //At the end of the initialization process start ping process
         let copy = this;
         setInterval(this.ping.bind(this), 5000);
+        setInterval(this.lookForSockets.bind(this), 60000);
     }
 
     initClient() {
