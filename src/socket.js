@@ -221,7 +221,7 @@ class Socket extends EventEmitter {
         });
     }
 
-    sendRecievedConfirmation(socket, uuid) {
+    sendReceivedConfirmation(socket, uuid) {
         console.log("sendRecievedConfirmation")
         let url = "http://" + socket.address + ":" + socket.PORT + "/confirmFileRecieved"
         console.log(url)

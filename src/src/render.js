@@ -50,12 +50,12 @@ async function showSentConfirmation(socket) {
     render(FileSentMessage(), "select-container", true);
 }
 
-async function showRecievedConfirmation(socket) {
+async function showReceivedConfirmation(socket) {
     let frame = Frame(SocketCardNoButton(socket.name, socket.address));
     await sleep(750);
     $('select-container').classList.add("select-file-space");
     await sleep(750);
-    render(FileRecievedMessage(), "select-container", true);
+    render(FileReceivedMessage(), "select-container", true);
 }
 
 function closeModal() {

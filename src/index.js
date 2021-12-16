@@ -31,8 +31,8 @@ async function main() {
         files.forEach(async file => {
             await saveFile(file)
         })
-        socketServer.sendRecievedConfirmation(socket, uuid)
-        showRecivedConfirmation(socket)
+        socketServer.sendReceivedConfirmation(socket, uuid)
+        showReceivedConfirmation(socket)
     })
 
     socketServer.on("files-sent", (socket, uuid) => {
