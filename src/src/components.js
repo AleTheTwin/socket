@@ -77,3 +77,19 @@ function HiddenInput(name, value) {
 function Div(id) {
     return '<div id="' + id + '" class="visually-hidden"></div>'
 }
+
+function FileRecievedMessage() {
+    return '<p>File(s) recieved 📥</p>\
+    <div>\
+        <div class="device-info btn btn-send" onclick="openFilesFolder()">\
+            <div class="info info-card">\
+                <h1>Show in folder</h1>\
+            </div>\
+        </div>\
+    </div>\
+    '
+}
+
+function FileRecievedMessage() {
+    return '<p>File(s) sent ✅</p>'
+}

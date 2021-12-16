@@ -32,10 +32,11 @@ async function main() {
             await saveFile(file)
         })
         socketServer.sendRecievedConfirmation(socket, uuid)
+        showRecivedConfirmation(socket)
     })
 
     socketServer.on("files-sent", (socket, uuid) => {
-        console.log("Archivos enviados a " + socket.name + " " + uuid)
+        showSentConfirmation(socket)
     })
 }
 
