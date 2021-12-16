@@ -78,7 +78,7 @@ function Div(id) {
     return '<div id="' + id + '" class="visually-hidden"></div>'
 }
 
-function FileRecievedMessage() {
+function FileReceivedMessage() {
     return '<p>File(s) recieved 📥</p>\
     <div>\
         <div class="device-info btn btn-send" onclick="openFilesFolder()">\
