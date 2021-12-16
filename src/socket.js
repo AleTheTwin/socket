@@ -193,7 +193,7 @@ class Socket extends EventEmitter {
 
         //At the end of the initialization process start ping process
         let copy = this;
-        setInterval(this.ping.bind(this), 25000);
+        setInterval(this.ping.bind(this), 5000);
     }
 
     initClient() {
