@@ -69,3 +69,7 @@ function SelectionBox(address, port) {
         </div>\
     </div>'
 }
+
+function HiddenInput(name, value) {
+    return '<input class="visually-hidden" name="' + name + '" value="' + value + '" type="text">'
+}

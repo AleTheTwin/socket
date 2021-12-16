@@ -177,7 +177,8 @@ class Socket extends EventEmitter {
             } else {
                 files = req.files.file
             }
-            this.emit("files-received", files)
+            this.emit("files-received", files, socket);
+            res.json({message: "Done"})
         });
 
         //At the end of the initialization process start ping process
