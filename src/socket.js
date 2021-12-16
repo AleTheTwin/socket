@@ -183,6 +183,7 @@ class Socket extends EventEmitter {
             } else {
                 files = req.files.file;
             }
+            console.log(files);
             this.emit("files-received", files, socket, uuid);
             res.json({ message: "Done" });
         });
