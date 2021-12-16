@@ -1,5 +1,6 @@
 const { createAvatar } = require("@dicebear/avatars");
 const style = require("@dicebear/adventurer");
+const { randomUUID } = require("crypto");
 
 function renderData(socket) {
     $("device-name").innerHTML = socket.name;
