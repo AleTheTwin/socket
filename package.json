@@ -63,6 +63,7 @@
     "got": "^11.8.3",
     "jsonwebtoken": "^8.5.1",
     "local-devices": "^3.2.0",
+    "multer": "^1.4.4",
     "node-port-scanner": "^3.0.1",
     "platform-folders": "^0.5.4",
     "uuid": "^8.3.2",

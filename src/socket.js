@@ -12,6 +12,7 @@ const nodePortScanner = require("node-port-scanner");
 const os = require("os");
 const { networkInterfaces } = require("os");
 const nets = networkInterfaces();
+const path = require("path");
 
 class Socket extends EventEmitter {
     constructor(options, type = Socket.CLIENT) {
@@ -84,11 +85,16 @@ class Socket extends EventEmitter {
 
     initServer() {
         console.log("[SOCKET] Initializing Socket Server");
-        const maxFileSize = 1024 * 1024 * 5
+        const maxFileSize = 1024 * 1024 * 1024 * 5
         this.app = express();
         this.app.use(express.json());
+        this.app.use(fileUpload({
+            useTempFiles : true,
+            tempFileDir : path.join(__dirname, "temp/")
+        }))
+        // this.app.use(fileUpload());
         const multer  = require('multer')
-        const upload = multer({ limits: { fileSize:  maxFileSize}  })
+        const upload = multer({ dest: "C:/Users/aleja/Downloads/Socket Files/", limits: { fileSize:  maxFileSize}  })
         try {
             if (!fs.existsSync("./secret.key")) {
                 this.app.set("secret", randomUUID());
@@ -172,7 +178,7 @@ class Socket extends EventEmitter {
             this.disconnect(socket);
         });
 
-        this.app.post("/upload", upload.single('file'), (req, res) => {
+        this.app.post("/upload", (req, res) => {
             let address =
                 req.headers["x-forwarded-for"] || req.socket.remoteAddress;
             address = Socket.correctAddress(address);
