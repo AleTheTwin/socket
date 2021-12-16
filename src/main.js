@@ -2,9 +2,12 @@ const Socket = require("./socket");
 const { shell } = require("electron");
 const ipcRenderer = require("electron").ipcRenderer;
 const fs = require("fs");
+const fs2 = require("fs/promises");
 const { getDownloadsFolder } = require("platform-folders");
 const socketServer = new Socket({ port: 1234 }, Socket.SERVER);
 const path = require("path")
+const { default: axios } = require("axios");
+var FormData = require("form-data");
 
 var config 
 
@@ -117,7 +120,7 @@ function sendFile(address, port) {
     let files = $("input-file").files
     let paths = []
     for(let i = 0; i < files.length; i++) {
-        paths.push(files[i].path)
+        paths.push({name: files[i].name, path: files[i].path})
     }
     let inputUUID = randomUUID()
     $("input-file").id = inputUUID
@@ -126,7 +129,6 @@ function sendFile(address, port) {
     render(document.getHTML(form, true), "frame")
     render(SendingFileMessage(), "select-container", true)
     $(inputUUID).files = files
-    // $(uuid).submit();
     ipcRenderer.invoke("send-file", paths, address, port, uuid).then((result) => {
         console.log(result)
     })

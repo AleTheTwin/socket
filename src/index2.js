@@ -2,7 +2,7 @@
 const fs = require('fs');
 const {shell} = require('electron') 
 const path = require("path")
-
+const maxFileSize = 1024 * 1000 * 1000 * 5
 
 
 var config = require('./config.json')
@@ -19,7 +19,9 @@ window.onload = loadData
 
 
 const express = require('express')
-const fileUpload = require('express-fileupload')
+const multer  = require('multer')
+const upload = multer({ limits: { fileSize:  maxFileSize}  })
+// const fileUpload = require('express-fileupload')
 
 const P2pServer = require('./p2pserver')
 const HTTP_PORT = process.env.HTTP_PORT || 3000
@@ -52,7 +54,7 @@ app.get('/listPeers', function(req, res) {
     res.send(p2pServer.listPeers())
 })
 
-app.post('/upload', async function(req,res) {
+app.post('/upload', upload.single('file'), async (req,res) => {
     let archivos = []
 
     if(req.files.file.length == undefined) {

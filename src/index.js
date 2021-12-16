@@ -1,5 +1,6 @@
 const { app, BrowserWindow } = require("electron");
-const fs = require("fs/promises");
+const fs2 = require("fs/promises");
+const fs = require("fs");
 var FormData = require("form-data");
 
 const { dialog } = require("electron");
@@ -42,9 +43,15 @@ ipcMain.handle("send-file", async (eve, files, address, port, uuid) => {
     let url = "http://" + address + ":" + port + "/upload";
     let formData = new FormData();
     for (let i = 0; i < files.length; i++) {
-        let buff = await fs.readFile(files[i]);
-        formData.append("file", buff);
+        let buff = fs.createReadStream(files[i].path, { highWaterMark: 1024 * 200 });
+        formData.append("file", buff, files[i].name);
     }
+
+    // for (let i = 0; i < files.length; i++) {
+    //     let buff = await fs2.readFile(files[i].path);
+    //     formData.append("file", buff, files[i].name);
+    // }
+
     formData.append("uuid", uuid);
 
     let config = {
@@ -58,10 +65,19 @@ ipcMain.handle("send-file", async (eve, files, address, port, uuid) => {
                 ...formData.getHeaders(),
                 Authentication: "Bearer ...",
             },
+            maxContentLength: 10000000000,
+            maxBodyLength: 100000000000,
+            onUploadProgress: (progressEvent) => {
+                let percentCompleted = Math.floor(
+                    (progressEvent.loaded * 100) / progressEvent.total
+                );
+                console.log(percentCompleted);
+            },
         });
-        return response.data;
+        return "sending";
     } catch (e) {
-        return e;
+        console.log(e);
+        return "";
     }
 });
 
