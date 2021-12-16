@@ -4,6 +4,7 @@ const ipcRenderer = require("electron").ipcRenderer;
 const fs = require("fs");
 const { getDownloadsFolder } = require("platform-folders");
 const socketServer = new Socket({ port: 1234 }, Socket.SERVER);
+const path = require("path")
 
 var config 
 
@@ -54,11 +55,11 @@ function validateConfig() {
     return new Promise(async (resolve, reject) => {
         let defaultFilesFolder = (getDownloadsFolder() + "/Socket Files/").replace(/\\/g, "/");
         let defaultPort = 1407
-        if (!fs.existsSync("./src/config.json")) {
+        if (!fs.existsSync(path.join(__dirname, "config.json"))) {
             config = { files: defaultFilesFolder, port: defaultPort };
             updateConfig(config)
         } else {
-            config = require("./config.json");
+            config = require(path.join(__dirname, "config.json"));
             if(!configHas(config, "files")) {
                 config.files = defaultFilesFolder
             }
@@ -76,7 +77,7 @@ function validateConfig() {
 }
 
 function updateConfig(config) {
-    fs.writeFileSync("./src/config.json", JSON.stringify(config));
+    fs.writeFileSync(path.join(__dirname, "config.json"), JSON.stringify(config));
 }
 
 function saveFile(file, count = 0) {

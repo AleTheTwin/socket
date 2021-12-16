@@ -47,6 +47,10 @@ h1:hover ~ .gear {
     align-items: center;
 }
 
+.option-bar svg {
+    margin-right: 10px
+}
+
 .option-close {
     background: red;
 }
