@@ -76,7 +76,8 @@ function closeModal() {
 }
 
 function modalIsOpen() {
-    return !($("modal").classList.includes("visually-hidden"));
+    let modal = $("modal");
+    return !(modal.classList.includes("visually-hidden"));
 }
 
 function openModal() {
