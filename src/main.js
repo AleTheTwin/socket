@@ -119,15 +119,15 @@ function sendFile() {
     for(let i = 0; i < files.length; i++) {
         paths.push(files[i].path)
     }
+    let inputUUID = randomUUID()
+    $("input-file").id = inputUUID
+    form.id = uuid
+    render(HiddenInput("uuid", uuid), form.id)
+    render(document.getHTML(form, true), "frame")
+    render(SendingFileMessage(), "select-container", true)
+    $(inputUUID).files = files
+    // $(uuid).submit();
     ipcRenderer.invoke("send-file", paths).then((result) => {
         console.log(result)
     })
-    // let inputUUID = randomUUID()
-    // $("input-file").id = inputUUID
-    // form.id = uuid
-    // render(HiddenInput("uuid", uuid), form.id)
-    // render(document.getHTML(form, true), "frame")
-    // render(SendingFileMessage(), "select-container", true)
-    // $(inputUUID).files = files
-    // $(uuid).submit();
 }
