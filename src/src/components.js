@@ -90,6 +90,6 @@ function FileRecievedMessage() {
     '
 }
 
-function FileRecievedMessage() {
+function FileSentMessage() {
     return '<p>File(s) sent ✅</p>'
 }
