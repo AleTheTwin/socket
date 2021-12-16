@@ -170,7 +170,7 @@ class Socket extends EventEmitter {
                 req.headers["x-forwarded-for"] || req.socket.remoteAddress;
             address = Socket.correctAddress(address);
             let socket = this.getSocketByAddress(address);
-            let uuid = req.body.uuid
+            let uuid = req.body.uuid;
             let files = [];
             if (req.files.file.length == undefined) {
                 files.push(req.files.file);
@@ -186,10 +186,10 @@ class Socket extends EventEmitter {
                 req.headers["x-forwarded-for"] || req.socket.remoteAddress;
             address = Socket.correctAddress(address);
             let socket = this.getSocketByAddress(address);
-            let uuid = req.body.uuid
+            let uuid = req.body.uuid;
 
-            this.emit("files-sent", socket, uuid)
-        })
+            this.emit("files-sent", socket, uuid);
+        });
 
         //At the end of the initialization process start ping process
         let copy = this;
@@ -222,26 +222,33 @@ class Socket extends EventEmitter {
     }
 
     sendReceivedConfirmation(socket, uuid) {
-        let url = "http://" + socket.address + ":" + socket.PORT + "/confirmFileRecieved"
-        axios.post(url, {uuid: uuid})
-        .catch((error) => {})
+        let url =
+            "http://" +
+            socket.address +
+            ":" +
+            socket.PORT +
+            "/confirmFileRecieved";
+        axios.post(url, { uuid: uuid }).catch((error) => {});
     }
 
     async lookForSockets() {
         let localDevices = await find();
-        let aux = []
-        localDevices.forEach(device => {
+        let aux = [];
+        localDevices.forEach((device) => {
             let res = aux.find(function (dev) {
                 return device.ip === dev.ip;
             });
-            if(res === undefined) {
+            if (res === undefined) {
                 aux.push(device);
             }
-        })
-        
+        });
+        localDevices = aux;
         localDevices.forEach(async (device) => {
             let result = await nodePortScanner(device.ip, [this.PORT]);
-            if (result.ports.open.includes(this.PORT) && !(this.localAdresses.includes(device.ip))) {
+            if (
+                result.ports.open.includes(this.PORT) &&
+                !this.localAdresses.includes(device.ip)
+            ) {
                 this.connectToSocket(device.ip);
                 await this.sleep(100);
             }
@@ -251,7 +258,7 @@ class Socket extends EventEmitter {
     sleep(ms) {
         return new Promise((resolve) => {
             setTimeout(resolve, ms);
-        })
+        });
     }
 
     getLocalAddresses() {
