@@ -16,23 +16,22 @@ async function main() {
     });
 }
 
-let file = {
-    name: "imagen.png",
-};
 
-// console.log(renameFile(file, 0))
-for (let i = 0; i < 3; i++) {
-    renameFile(file, i);
-}
-
-function renameFile(file, count) {
-    let aux = file.name;
-    aux = aux.split("").reverse().join("");
-    aux = aux.slice(aux.indexOf(".") + 1);
-    let name = aux.split("").reverse().join("");
-    let extension = file.name.slice(file.name.indexOf("."));
-
-    let plus = " (" + (count + 1) + ")";
-    name = name + plus;
-    returnname + extension;
-}
+let localDevices = [
+    {ip: "127.0.0.1"},
+    {ip: "127.0.0.2"},
+    {ip: "127.0.0.3"},
+    {ip: "127.0.0.1"},    
+    {ip: "127.0.0.1"},    
+    {ip: "127.0.0.1"},    
+];
+let aux = []
+localDevices.forEach(device => {
+    let res = aux.find(function (dev) {
+        return device.ip === dev.ip;
+    });
+    if(res === undefined) {
+        aux.push(device);
+    }
+})
+console.log(aux)
