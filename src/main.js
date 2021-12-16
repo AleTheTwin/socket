@@ -1,79 +1,111 @@
-const { app, BrowserWindow } = require('electron')
-const express = require('express')
-const fs = require('fs');
+const Socket = require("./socket");
+const { shell } = require("electron");
+const ipcRenderer = require("electron").ipcRenderer;
+const fs = require("fs");
+const { getDownloadsFolder } = require("platform-folders");
+const socketServer = new Socket({ port: 1234 }, Socket.SERVER);
 
-const {dialog} = require('electron');
-const path = require("path")
-var ipcMain = require('electron').ipcMain
+var config 
 
-var frame 
+main();
+async function main() {
+    await validateConfig();
+    socketServer.PORT = config.port;
+    socketServer.initServer();
+    socketServer.lookForSockets();
 
-var isBusy = false
+    window.onload = renderData(socketServer);
 
-async function createViewport() {
-    frame = new BrowserWindow({
-        width : 900,
-        height : 620,
-        fullscreenable : false,
-        webPreferences : {
-            nodeIntegration : true,
-            contextIsolation : false,
-        },
-        backgroundColor : "#36393F",
-        show : false,
-        frame : false,
-        maximizable: false,
-        resizable: false,
-        icon: __dirname + '/icons/icon.ico'
-    })
-
-    frame.loadFile(path.join(__dirname, "index.html"))
-    frame.openDevTools()
-    frame.once('ready-to-show', () => {
-        frame.show()
-    })
-}
-
-app.on("ready", createViewport)
-
-ipcMain.handle("minimize-window", () => {
-    frame.minimize()
-})
-
-ipcMain.handle("close-window", () => {
-    app.quit()
-})
-
-async function selectFolder() {
-    var directorio = await  dialog.showOpenDialog({
-        properties: ['openDirectory']
+    socketServer.on("connection", (socket) => {
+        let card = SocketCard(socket);
+        render(card, "device-container");
     });
-    directorio = directorio.canceled ? undefined : path.resolve(directorio.filePaths[0]).replace(/\\/g, "/")
-    return directorio !== undefined ? directorio : false
+
+    socketServer.on("disconnection", (disconnectedSocket) => {
+        derender(
+            disconnectedSocket.name + disconnectedSocket.address + "-card"
+        );
+    });
+
+    socketServer.on("files-received", (files, socket, uuid) => {
+        files.forEach(async file => {
+            await saveFile(file)
+        })
+        socketServer.sendReceivedConfirmation(socket, uuid)
+        showReceivedConfirmation(socket)
+    })
+
+    socketServer.on("files-sent", (socket, uuid) => {
+        showSentConfirmation(socket)
+        $(uuid).parentElement.removeChild($(uuid));
+    })
 }
 
-async function createDownloadWindow() {
-    let downloadFrame = new BrowserWindow({
-        width : 800,
-        height : 600,
-        fullscreenable : false,
-        webPreferences : {
-            nodeIntegration : true,
-            contextIsolation : false
-        },
-        minWidth : 853,
-        minHeight : 480,
-        backgroundColor : "#36393F",
-        show : false,
-        downloadFrame : true,
-        maximizable: false,
-        resizable: false
-    })
+function openFilesFolder() {
+    shell.openPath(config.files);
+}
 
-    downloadFrame.loadFile(path.join(__dirname, "download-shortcut.html"))
-    downloadFrame.removeMenu()
-    // downloadFrame.openDevTools()
-    downloadFrame.once('ready-to-show', () => {
-        downloadFrame.show()
+function configHas(obj, parameter) {
+    let keys = Object.keys(obj);
+    return keys.includes(parameter);
+}
+
+function validateConfig() {
+    return new Promise(async (resolve, reject) => {
+        let defaultFilesFolder = (getDownloadsFolder() + "/Socket Files/").replace(/\\/g, "/");
+        let defaultPort = 1407
+        if (!fs.existsSync("./src/config.json")) {
+            config = { files: defaultFilesFolder, port: defaultPort };
+            updateConfig(config)
+        } else {
+            config = require("./config.json");
+            if(!configHas(config, "files")) {
+                config.files = defaultFilesFolder
+            }
+            if(!configHas(config, "port")) {
+                config.port = defaultPort
+            }
+            updateConfig(config)
+        }
+
+        if(!fs.existsSync(config.files)) {
+            fs.mkdirSync(config.files)
+        }
+        resolve()
+    });
+}
+
+function updateConfig(config) {
+    fs.writeFileSync("./src/config.json", JSON.stringify(config));
+}
+
+function saveFile(file, count = 0) {
+    return new Promise((resolve, reject) => {
+        let filepath = config.files + "/" + file.name
+        let aux
+        while(fs.existsSync(filepath)) {
+            aux = file.name
+            aux = renameFile(file, count)
+            filepath = config.files + "/" + aux
+            count++;
+        } 
+        file.mv(filepath, err => {
+            if(err) {
+                console.log(err)
+            }
+        })
+               
     })
+}
+
+function renameFile(file, count) {
+    let aux = file.name;
+    aux = aux.split("").reverse().join("");
+    aux = aux.slice(aux.indexOf(".") + 1);
+    let name = aux.split("").reverse().join("");
+    let extension = file.name.slice(file.name.indexOf("."));
+
+    let plus = " (" + (count + 1) + ")";
+    name = name + plus;
+    return name + extension;
 }
