@@ -176,7 +176,6 @@ class Socket extends EventEmitter {
         });
 
         this.app.post("/upload", (req, res) => {
-            console.log(req.headers)
             let address =
                 req.headers["x-forwarded-for"] || req.socket.remoteAddress;
             address = Socket.correctAddress(address);
