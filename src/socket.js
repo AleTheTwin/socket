@@ -13,7 +13,7 @@ const os = require("os");
 const { networkInterfaces } = require("os");
 const nets = networkInterfaces();
 const path = require("path");
-
+var counter = 0
 class Socket extends EventEmitter {
     constructor(options, type = Socket.CLIENT) {
         if (options === undefined || options.port === undefined) {
@@ -57,7 +57,7 @@ class Socket extends EventEmitter {
                     socket.PORT,
                 ]);
                 if (result.ports.closed.includes(socket.PORT)) {
-                    await this.sleep(200)
+                    await this.sleep(1000)
                     let confirm = await nodePortScanner(socket.address, [socket.PORT]);
                     if(confirm.ports.closed.includes(socket.PORT)) {
                         this.disconnect(socket);
@@ -92,9 +92,6 @@ class Socket extends EventEmitter {
             useTempFiles : true,
             tempFileDir : path.join(__dirname, "temp/")
         }))
-        // this.app.use(fileUpload());
-        const multer  = require('multer')
-        const upload = multer({ dest: "C:/Users/aleja/Downloads/Socket Files/", limits: { fileSize:  maxFileSize}  })
         try {
             if (!fs.existsSync("./secret.key")) {
                 this.app.set("secret", randomUUID());

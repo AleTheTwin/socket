@@ -48,7 +48,8 @@ h1:hover ~ .gear {
 }
 
 .option-bar svg {
-    margin-right: 10px
+    margin-right: 10px;
+    -webkit-app-region: drag;
 }
 
 .option-close {
