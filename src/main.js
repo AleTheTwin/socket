@@ -5,11 +5,11 @@ const fs = require("fs");
 const fs2 = require("fs/promises");
 const { getDownloadsFolder } = require("platform-folders");
 const socketServer = new Socket({ port: 1234 }, Socket.SERVER);
-const path = require("path")
+const path = require("path");
 const { default: axios } = require("axios");
 var FormData = require("form-data");
 
-var config 
+var config;
 
 main();
 async function main() {
@@ -32,17 +32,17 @@ async function main() {
     });
 
     socketServer.on("files-received", (files, socket, uuid) => {
-        files.forEach(async file => {
-            await saveFile(file)
-        })
-        socketServer.sendReceivedConfirmation(socket, uuid)
-        showReceivedConfirmation(socket)
-    })
+        files.forEach(async (file) => {
+            await saveFile(file);
+        });
+        socketServer.sendReceivedConfirmation(socket, uuid);
+        showReceivedConfirmation(socket);
+    });
 
     socketServer.on("files-sent", (socket, uuid) => {
-        showSentConfirmation(socket)
+        showSentConfirmation(socket);
         // $(uuid).parentElement.removeChild($(uuid));
-    })
+    });
 }
 
 function openFilesFolder() {
@@ -56,50 +56,54 @@ function configHas(obj, parameter) {
 
 function validateConfig() {
     return new Promise(async (resolve, reject) => {
-        let defaultFilesFolder = (getDownloadsFolder() + "/Socket Files/").replace(/\\/g, "/");
-        let defaultPort = 1407
+        let defaultFilesFolder = (
+            getDownloadsFolder() + "/Socket Files/"
+        ).replace(/\\/g, "/");
+        let defaultPort = 1407;
         if (!fs.existsSync(path.join(__dirname, "config.json"))) {
             config = { files: defaultFilesFolder, port: defaultPort };
-            updateConfig(config)
+            updateConfig(config);
         } else {
             config = require(path.join(__dirname, "config.json"));
-            if(!configHas(config, "files")) {
-                config.files = defaultFilesFolder
+            if (!configHas(config, "files")) {
+                config.files = defaultFilesFolder;
             }
-            if(!configHas(config, "port")) {
-                config.port = defaultPort
+            if (!configHas(config, "port")) {
+                config.port = defaultPort;
             }
-            updateConfig(config)
+            updateConfig(config);
         }
 
-        if(!fs.existsSync(config.files)) {
-            fs.mkdirSync(config.files)
+        if (!fs.existsSync(config.files)) {
+            fs.mkdirSync(config.files);
         }
-        resolve()
+        resolve();
     });
 }
 
 function updateConfig(config) {
-    fs.writeFileSync(path.join(__dirname, "config.json"), JSON.stringify(config));
+    fs.writeFileSync(
+        path.join(__dirname, "config.json"),
+        JSON.stringify(config)
+    );
 }
 
 function saveFile(file, count = 0) {
     return new Promise((resolve, reject) => {
-        let filepath = config.files + "/" + file.name
-        let aux
-        while(fs.existsSync(filepath)) {
-            aux = file.name
-            aux = renameFile(file, count)
-            filepath = config.files + "/" + aux
+        let filepath = config.files + "/" + file.name;
+        let aux;
+        while (fs.existsSync(filepath)) {
+            aux = file.name;
+            aux = renameFile(file, count);
+            filepath = config.files + "/" + aux;
             count++;
-        } 
-        file.mv(filepath, err => {
-            if(err) {
-                console.log(err)
+        }
+        file.mv(filepath, (err) => {
+            if (err) {
+                console.log(err);
             }
-        })
-               
-    })
+        });
+    });
 }
 
 function renameFile(file, count) {
@@ -115,58 +119,23 @@ function renameFile(file, count) {
 }
 
 function sendFile(address, port) {
-    let uuid = randomUUID()
-    let form = $("file-form")
-    let files = $("input-file").files
-    let paths = []
-    for(let i = 0; i < files.length; i++) {
-        paths.push({name: files[i].name, path: files[i].path})
-    }
-    let inputUUID = randomUUID()
-    $("input-file").id = inputUUID
-    form.id = uuid
-    render(HiddenInput("uuid", uuid), form.id)
-    render(document.getHTML(form, true), "frame")
-    render(SendingFileMessage(), "select-container", true)
-    $(inputUUID).files = files
-    // ipcRenderer.invoke("send-file", paths, address, port, uuid).then((result) => {
-    //     console.log(result)
-    // })
-    send("send-file", paths, address, port, uuid)
-}
-
-async function send(eve, files, address, port, uuid){
-    let url = "http://" + address + ":" + port + "/upload";
-    let formData = new FormData();
+    let uuid = randomUUID();
+    let form = $("file-form");
+    let files = $("input-file").files;
+    let paths = [];
     for (let i = 0; i < files.length; i++) {
-        let buff = fs.createReadStream(files[i].path, { highWaterMark: 1024 * 1024 * 200 });
-        formData.append("file", buff, files[i].name);
+        paths.push({ name: files[i].name, path: files[i].path });
     }
-    formData.append("uuid", uuid);
-
-    let config = {
-        headers: {
-            "content-type": "multipart/form-data",
-        },
-    };
-    try {
-        let response = await axios.post(url, formData, {
-            headers: {
-                ...formData.getHeaders(),
-                Authentication: "Bearer ...",
-            },
-            maxContentLength: 10000000000,
-            maxBodyLength: 100000000000,
-            onUploadProgress: (progressEvent) => {
-                let percentCompleted = Math.floor(
-                    (progressEvent.loaded * 100) / progressEvent.total
-                );
-                console.log(percentCompleted);
-            },
+    let inputUUID = randomUUID();
+    $("input-file").id = inputUUID;
+    form.id = uuid;
+    render(HiddenInput("uuid", uuid), form.id);
+    render(document.getHTML(form, true), "frame");
+    render(SendingFileMessage(), "select-container", true);
+    $(inputUUID).files = files;
+    ipcRenderer
+        .invoke("send-file", paths, address, port, uuid)
+        .then((result) => {
+            console.log(result);
         });
-        return "sending";
-    } catch (e) {
-        console.log(e);
-        return "";
-    }
 }
