@@ -319,6 +319,14 @@ h1:hover ~ .gear {
     border-radius: 10px;
 }
 
+.btn-select form {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-select form > label {
+    flex-grow: 1;
+}
 .btn-select h1 {
     margin: 0;
 }

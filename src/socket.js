@@ -182,7 +182,6 @@ class Socket extends EventEmitter {
             let address =
                 req.headers["x-forwarded-for"] || req.socket.remoteAddress;
             address = Socket.correctAddress(address);
-            console.log(req)
             let socket = this.getSocketByAddress(address);
             let uuid = req.body.uuid;
             let files = [];
@@ -191,7 +190,6 @@ class Socket extends EventEmitter {
             } else {
                 files = req.files.file;
             }
-            console.log(files);
             this.emit("files-received", files, socket, uuid);
             res.json({ message: "Done" });
         });

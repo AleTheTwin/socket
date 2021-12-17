@@ -124,15 +124,18 @@ function inputListen() {
     $("drag-and-drop").ondragover = $("drag-and-drop").ondragenter = (evt) => {
         evt.preventDefault();
         $("drop-text").innerHTML = "Drop it!";
+        $("drag-and-drop").style.background = "#abfd9e"
     };
 
     $("drag-and-drop").ondragleave = () => {
         $("drop-text").innerHTML = "Drag your file and drop it here";
+        $("drag-and-drop").style.background = "#b5b5b5"
     };
 
     $("drag-and-drop").ondrop = (evt) => {
         evt.preventDefault();
         $("drop-text").innerHTML = "Drag your file and drop it here";
+        $("drag-and-drop").style.background = "#b5b5b5"
         $("input-file").files = evt.dataTransfer.files;
         let files = $("input-file").files;
         let contentLabel = "";
@@ -165,4 +168,12 @@ document.getHTML= function(who, deep){
     }
     el= null;
     return txt;
+}
+
+$("button-files").onmouseover = () => {
+    $("files-icon").innerHTML = " 📂"
+}
+
+$("button-files").onmouseout = () => {
+    $("files-icon").innerHTML = " 📁"
 }
