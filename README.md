@@ -2,11 +2,11 @@
 An app for tranfering files in a local network between desktop devices
 
 ## Feautres
-* Automatically connect to other sockets on a LAN
+* Automatically connect to other sockets on the LAN
 * Send multiple files at the same time
 * Ultra high transfer speeds* since it is over the LAN
 * Just run and that's all
-* Connect from any desktop platfor! (OSX, Windows and Linux)
+* Connect from any desktop platform! (MAC OS, Windows and Linux)
 
 *Limited by the socket with the lowest speed connection 
 

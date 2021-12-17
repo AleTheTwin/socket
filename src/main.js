@@ -129,7 +129,44 @@ function sendFile(address, port) {
     render(document.getHTML(form, true), "frame")
     render(SendingFileMessage(), "select-container", true)
     $(inputUUID).files = files
-    ipcRenderer.invoke("send-file", paths, address, port, uuid).then((result) => {
-        console.log(result)
-    })
+    // ipcRenderer.invoke("send-file", paths, address, port, uuid).then((result) => {
+    //     console.log(result)
+    // })
+    send("send-file", paths, address, port, uuid)
+}
+
+async function send(eve, files, address, port, uuid){
+    let url = "http://" + address + ":" + port + "/upload";
+    let formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+        let buff = fs.createReadStream(files[i].path, { highWaterMark: 1024 * 1024 * 200 });
+        formData.append("file", buff, files[i].name);
+    }
+    formData.append("uuid", uuid);
+
+    let config = {
+        headers: {
+            "content-type": "multipart/form-data",
+        },
+    };
+    try {
+        let response = await axios.post(url, formData, {
+            headers: {
+                ...formData.getHeaders(),
+                Authentication: "Bearer ...",
+            },
+            maxContentLength: 10000000000,
+            maxBodyLength: 100000000000,
+            onUploadProgress: (progressEvent) => {
+                let percentCompleted = Math.floor(
+                    (progressEvent.loaded * 100) / progressEvent.total
+                );
+                console.log(percentCompleted);
+            },
+        });
+        return "sending";
+    } catch (e) {
+        console.log(e);
+        return "";
+    }
 }
