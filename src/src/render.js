@@ -8,28 +8,49 @@ function renderData(socket) {
     $("device-avatar").innerHTML = generateAvatar(socket.name);
 }
 
-async function setDragOverListeners(id) {
+async function setDragOverListeners(socket) {
+    let id = socket.name + socket.address + "-card";
     await sleep(500);
     $(id).ondragover = (event) => {
         event.preventDefault();
-        $(id).classList.add('dragover-device-card')
-    }
+        $(id).classList.add("dragover-device-card");
+    };
 
     $(id).ondragleave = (event) => {
         event.preventDefault();
-        $(id).classList.remove('dragover-device-card')
-    }
+        $(id).classList.remove("dragover-device-card");
+    };
 
-    $(id).ondrop = (event) => {
+    $(id).ondrop = async (event) => {
         event.preventDefault();
-        $(id).classList.remove('dragover-device-card')
+        $(id).classList.remove("dragover-device-card");
 
         let files = event.dataTransfer.files;
-        console.log(files)
-    }
+        console.log(files);
+
+        let socketCard = SocketCardNoButton(socket.name, socket.address);
+        let frame = Frame(socketCard);
+        render(frame, "modal-content");
+        openModal();
+        await sleep(750);
+        $("select-container").classList.add("select-file-space");
+        await sleep(750);
+        let message = FileSentConfirmMessage(files, socket)
+        render(message, "select-container");
+        $('input-file').files = files
+    };
 }
 
-function render(element, id, replace = false) {
+function render(element, id, replace = false, socket) {
+    if (socket) {
+        if ($(socket.name + socket.address + "-card")) {
+            return;
+        }
+    }
+
+    if (element.id !== undefined) {
+        return;
+    }
     if (replace) {
         $(id).innerHTML = element;
     } else {
@@ -64,27 +85,27 @@ async function openSendFrame(name, address, port) {
 }
 
 async function showSentConfirmation(socket) {
-    if(modalIsOpen()) {
+    if (modalIsOpen()) {
         closeModal();
     }
     let frame = Frame(SocketCardNoButton(socket.name, socket.address));
     render(frame, "modal-content");
-    openModal()
+    openModal();
     await sleep(750);
-    $('select-container').classList.add("select-file-space");
+    $("select-container").classList.add("select-file-space");
     await sleep(750);
     render(FileSentMessage(), "select-container", true);
 }
 
 async function showReceivedConfirmation(socket) {
-    if(modalIsOpen()) {
+    if (modalIsOpen()) {
         closeModal();
     }
     let frame = Frame(SocketCardNoButton(socket.name, socket.address));
     render(frame, "modal-content");
-    openModal()
+    openModal();
     await sleep(750);
-    $('select-container').classList.add("select-file-space");
+    $("select-container").classList.add("select-file-space");
     await sleep(750);
     render(FileReceivedMessage(), "select-container", true);
 }
@@ -100,7 +121,7 @@ function closeModal() {
 
 function modalIsOpen() {
     let modal = $("modal");
-    return !(modal.classList.contains("visually-hidden"));
+    return !modal.classList.contains("visually-hidden");
 }
 
 function openModal() {
@@ -145,18 +166,18 @@ function inputListen() {
     $("drag-and-drop").ondragover = $("drag-and-drop").ondragenter = (evt) => {
         evt.preventDefault();
         $("drop-text").innerHTML = "Drop it!";
-        $("drag-and-drop").style.background = "#abfd9e"
+        $("drag-and-drop").style.background = "#abfd9e";
     };
 
     $("drag-and-drop").ondragleave = () => {
         $("drop-text").innerHTML = "Drag your file and drop it here";
-        $("drag-and-drop").style.background = "#b5b5b5"
+        $("drag-and-drop").style.background = "#b5b5b5";
     };
 
     $("drag-and-drop").ondrop = (evt) => {
         evt.preventDefault();
         $("drop-text").innerHTML = "Drag your file and drop it here";
-        $("drag-and-drop").style.background = "#b5b5b5"
+        $("drag-and-drop").style.background = "#b5b5b5";
         $("input-file").files = evt.dataTransfer.files;
         let files = $("input-file").files;
         let contentLabel = "";
@@ -178,23 +199,25 @@ function inputListen() {
     };
 }
 
-document.getHTML= function(who, deep){
-    if(!who || !who.tagName) return '';
-    var txt, ax, el= document.createElement("div");
+document.getHTML = function (who, deep) {
+    if (!who || !who.tagName) return "";
+    var txt,
+        ax,
+        el = document.createElement("div");
     el.appendChild(who.cloneNode(false));
-    txt= el.innerHTML;
-    if(deep){
-        ax= txt.indexOf('>')+1;
-        txt= txt.substring(0, ax)+who.innerHTML+ txt.substring(ax);
+    txt = el.innerHTML;
+    if (deep) {
+        ax = txt.indexOf(">") + 1;
+        txt = txt.substring(0, ax) + who.innerHTML + txt.substring(ax);
     }
-    el= null;
+    el = null;
     return txt;
-}
+};
 
 $("button-files").onmouseover = () => {
-    $("files-icon").innerHTML = " 📂"
-}
+    $("files-icon").innerHTML = " 📂";
+};
 
 $("button-files").onmouseout = () => {
-    $("files-icon").innerHTML = " 📁"
-}
+    $("files-icon").innerHTML = " 📁";
+};

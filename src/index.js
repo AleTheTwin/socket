@@ -41,6 +41,7 @@ ipcMain.handle("minimize-window", () => {
 
 ipcMain.handle("send-file", async (eve, files, address, port, uuid) => {
     let url = "http://" + address + ":" + port + "/upload";
+    console.log(url);
     let formData = new FormData();
     let buffers = []
     for (let i = 0; i < files.length; i++) {
@@ -82,7 +83,7 @@ ipcMain.handle("send-file", async (eve, files, address, port, uuid) => {
         return "sent";
     } catch (e) {
         console.log(e);
-        return "failed";
+        return e;
     }
 });
 

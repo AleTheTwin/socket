@@ -22,8 +22,8 @@ async function main() {
 
     socketServer.on("connection",async (socket) => {
         let card = SocketCard(socket);
-        await render(card, "device-container");
-        setDragOverListeners( socket.name + socket.address + '-card')
+        await render(card, "device-container", false, socket);
+        setDragOverListeners(socket)
     });
 
     socketServer.on("disconnection", (disconnectedSocket) => {

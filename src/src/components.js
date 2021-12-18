@@ -93,3 +93,36 @@ function FileReceivedMessage() {
 function FileSentMessage() {
     return '<p>File(s) sent ✅</p>'
 }
+
+function FileSentConfirmMessage(files, socket) {
+    let contentLabel = ""
+    for (let i = 0; i < files.length; i++) {
+        if (i > 0) {
+            contentLabel += "<br>";
+        }
+        if (i > 3) {
+            contentLabel += "more...";
+            break;
+        } else {
+            contentLabel +=
+                "📄 " +
+                files[i].name.slice(0, 25) +
+                (files[i].name.length > 25 ? "..." : "");
+        }
+    }
+    return '\
+    <div>\
+        <p>Do you want to sent this files?</p>\
+        <small id="files-to-send">' + contentLabel + '</small>\
+        <div class="device-info btn btn-send" onclick="sendFile(' + "'" + socket.address + "','" + socket.PORT + "'" + ')">\
+            <form class="visually-hidden" id="file-form" action="http://' + socket.address + ":" + socket.PORT + '/upload" method="post" target="frame2" enctype="multipart/form-data">\
+            <iframe id="frame2" class="visually-hidden" name="frame2"></iframe>\
+            <input class="visually-hidden" type="file" name="file" id="input-file" multiple>\
+            <label class="visually-hidden" class="btn" for="input-file">Select file 📁</label>\
+            </form>\
+            <div class="info info-card">\
+                <h1>Send</h1>\
+            </div>\
+        </div>\
+    </div>'
+}
