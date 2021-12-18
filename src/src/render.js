@@ -8,7 +8,8 @@ function renderData(socket) {
     $("device-avatar").innerHTML = generateAvatar(socket.name);
 }
 
-function setDragOverListeners(id) {
+async function setDragOverListeners(id) {
+    await sleep(500);
     $(id).ondragover = (event) => {
         event.preventDefault();
         $(id).classList.add('dragover-device-card')
@@ -17,6 +18,14 @@ function setDragOverListeners(id) {
     $(id).ondragleave = (event) => {
         event.preventDefault();
         $(id).classList.remove('dragover-device-card')
+    }
+
+    $(id).ondrop = (event) => {
+        event.preventDefault();
+        $(id).classList.remove('dragover-device-card')
+
+        let files = event.dataTransfer.files;
+        console.log(files)
     }
 }
 

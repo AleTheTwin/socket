@@ -20,9 +20,9 @@ async function main() {
 
     window.onload = renderData(socketServer);
 
-    socketServer.on("connection", (socket) => {
+    socketServer.on("connection",async (socket) => {
         let card = SocketCard(socket);
-        render(card, "device-container");
+        await render(card, "device-container");
         setDragOverListeners( socket.name + socket.address + '-card')
     });
 
