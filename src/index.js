@@ -12,6 +12,7 @@ var frame;
 
 async function createViewport() {
     frame = new BrowserWindow({
+        transparent: true, 
         width: 900,
         height: 620,
         fullscreenable: false,
@@ -19,7 +20,6 @@ async function createViewport() {
             nodeIntegration: true,
             contextIsolation: false,
         },
-        backgroundColor: "#36393F",
         show: false,
         frame: false,
         maximizable: false,
@@ -41,7 +41,6 @@ ipcMain.handle("minimize-window", () => {
 
 ipcMain.handle("send-file", async (eve, files, address, port, uuid) => {
     let url = "http://" + address + ":" + port + "/upload";
-    console.log(url);
     let formData = new FormData();
     let buffers = []
     for (let i = 0; i < files.length; i++) {
