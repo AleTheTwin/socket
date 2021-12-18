@@ -23,6 +23,7 @@ async function main() {
     socketServer.on("connection", (socket) => {
         let card = SocketCard(socket);
         render(card, "device-container");
+        setDragOverListeners( socket.name + socket.address + '-card')
     });
 
     socketServer.on("disconnection", (disconnectedSocket) => {

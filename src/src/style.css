@@ -206,6 +206,13 @@ h1:hover ~ .gear {
     transition: ease-in-out 0.7s;
 }
 
+.dragover-device-card {
+    border: 1px solid #abfd9e;
+    transform: scale(1.099);
+    transition: 0.1s;
+}
+
+
 .card-content {
     display: flex;
     flex-direction: column;
