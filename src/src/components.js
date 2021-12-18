@@ -8,7 +8,7 @@ function SendingFileMessage() {
 
 function SocketCard(socket) {
     return '\
-    <div class="device-card general-shadow" id="' + socket.name + socket.address + '-card">\
+    <div class="device-card general-shadow device-card-dashboard" id="' + socket.name + socket.address + '-card">\
         <div class="card-content">\
             <div class="avatar avatar-card general-shadow" id="' + socket.name + '-avatar">' +  generateAvatar(socket.name, 80)  + '</div>\
             <div class="device-info">\

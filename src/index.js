@@ -42,14 +42,15 @@ ipcMain.handle("minimize-window", () => {
 ipcMain.handle("send-file", async (eve, files, address, port, uuid) => {
     let url = "http://" + address + ":" + port + "/upload";
     let formData = new FormData();
+    let buffers = []
     for (let i = 0; i < files.length; i++) {
-        let buff = fs.createReadStream(files[i].path, { highWaterMark: 1024 * 1024 * 200 });
-        formData.append("file", buff, files[i].name);
+        buffers[i] = fs.createReadStream(files[i].path, { highWaterMark: 20240 });
+        formData.append("file", buffers[i], files[i].name);
     }
 
     // for (let i = 0; i < files.length; i++) {
-    //     let buff = await fs2.readFile(files[i].path);
-    //     formData.append("file", buff, files[i].name);
+    //     buffers[i] = await fs2.readFile(files[i].path);
+    //     formData.append("file", buffers[i], files[i].name);
     // }
 
     formData.append("uuid", uuid);
@@ -74,10 +75,14 @@ ipcMain.handle("send-file", async (eve, files, address, port, uuid) => {
                 console.log(percentCompleted);
             },
         });
-        return "sending";
+        buffers.forEach(buffer => {
+            buffer.close()
+            buffer.destroy()
+        })
+        return "sent";
     } catch (e) {
         console.log(e);
-        return "";
+        return "failed";
     }
 });
 
