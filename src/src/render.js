@@ -166,18 +166,18 @@ function inputListen() {
     $("drag-and-drop").ondragover = $("drag-and-drop").ondragenter = (evt) => {
         evt.preventDefault();
         $("drop-text").innerHTML = "Drop it!";
-        $("drag-and-drop").style.background = "#abfd9e";
+        $("drag-and-drop").style.background = "linear-gradient(217deg, #df69db30, #7d6ce530 70.71%)";
     };
 
     $("drag-and-drop").ondragleave = () => {
         $("drop-text").innerHTML = "Drag your file and drop it here";
-        $("drag-and-drop").style.background = "#b5b5b5";
+        $("drag-and-drop").style.background = "#b5b5b500";
     };
 
     $("drag-and-drop").ondrop = (evt) => {
         evt.preventDefault();
         $("drop-text").innerHTML = "Drag your file and drop it here";
-        $("drag-and-drop").style.background = "#b5b5b5";
+        $("drag-and-drop").style.background = "#b5b5b500";
         $("input-file").files = evt.dataTransfer.files;
         let files = $("input-file").files;
         let contentLabel = "";

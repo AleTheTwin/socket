@@ -289,7 +289,8 @@ h1:hover ~ .gear {
 }
 
 .dragover-device-card {
-    border: 1px solid #abfd9e;
+    border: 1px solid #df69db50;
+    /* -webkit-border-image: -webkit-gradient(linear, left top, left bottom, from(#00abeb), to(#fff), color-stop(0.5, #fff), color-stop(0.5, #66cc00)) 21 30 30 21 repeat repeat; */
     transform: scale(1.099);
     transition: 0.1s;
 }
@@ -309,6 +310,10 @@ h1:hover ~ .gear {
     text-align: center;
     margin-left: 10px;
     margin-right: 10px;
+}
+
+.color-glass-theme {
+    color: #cbcaca;
 }
 
 /* * {
@@ -383,7 +388,7 @@ h1:hover ~ .gear {
 }
 
 .modal-shadow {
-    backdrop-filter: blur( 4.5px );
+    backdrop-filter: blur( 15px );
     position: fixed;
     background: #00000091;
     height: 100vh;
@@ -394,7 +399,6 @@ h1:hover ~ .gear {
 
 .modal-shadow * {
     opacity: 1;
-    backdrop-filter: blur( 0px );
 }
 
 .visually-hidden {
@@ -402,17 +406,18 @@ h1:hover ~ .gear {
 }
 
 .drag-and-drop {
-    background: #b5b5b5;
+    /* background: #b5b5b5; */
     min-width: 250px;
     min-height: 100px;
     margin-left: auto;
     margin-right: auto;
     margin-top: 20px;
     margin-bottom: 10px;
+    border-radius: 10px;
 }
 
 .drag-and-drop p {
-    color: #3c3f45;
+    /* color: #3c3f45; */
     margin-left: auto;
     max-width: 200px;
     margin-right: auto;
@@ -422,8 +427,8 @@ h1:hover ~ .gear {
 .btn-select {
     font-size: 8px;
     text-align: center;
-    color: #3c3f45;
-    background: #b5b5b5;
+    /* color: #3c3f45;
+    background: #b5b5b5; */
     border-radius: 10px;
 }
 
@@ -439,9 +444,9 @@ h1:hover ~ .gear {
     margin: 0;
 }
 
-.select-file .btn-send {
+/* .select-file .btn-send {
     background: #abfd9e;
-}
+} */
 
 .btn-select label {
     font-size: 14px;

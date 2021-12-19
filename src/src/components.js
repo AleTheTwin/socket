@@ -51,19 +51,19 @@ function SocketCardNoButton(name, address) {
 
 function SelectionBox(address, port) {
     return '\
-    <div class="drag-and-drop" id="drag-and-drop"><p id="drop-text">Drag your file and drop it here</p></div>\
+    <div class="drag-and-drop glass-theme color-glass-theme" id="drag-and-drop"><p id="drop-text">Drag your file and drop it here</p></div>\
     <small id="path-to-file"></small>\
-    <div class="btn btn-select">\
-    <form id="file-form" action="http://' +
-        address +
-        ":" + port +
-        '/upload" method="post" target="frame2" enctype="multipart/form-data">\
-        <iframe id="frame2" class="visually-hidden" name="frame2"></iframe>\
-        <input class="visually-hidden" type="file" name="file" id="input-file" multiple>\
-        <label class="btn" for="input-file">Select file 📁</label>\
-    </form>\
+    <div class="btn btn-select glass-theme">\
+        <form id="file-form" action="http://' +
+            address +
+            ":" + port +
+            '/upload" method="post" target="frame2" enctype="multipart/form-data">\
+            <iframe id="frame2" class="visually-hidden" name="frame2"></iframe>\
+            <input class="visually-hidden" type="file" name="file" id="input-file" multiple>\
+            <label class="btn" for="input-file">Select file 📁</label>\
+        </form>\
     </div>\
-    <div class="device-info btn btn-send" onclick="sendFile(' + "'" + address + "','" + port + "'" + ')">\
+    <div class="device-info btn btn-send glass-theme" onclick="sendFile(' + "'" + address + "','" + port + "'" + ')">\
         <div class="info info-card">\
             <h1>Send file</h1>\
         </div>\
