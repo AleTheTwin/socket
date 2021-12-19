@@ -61,6 +61,7 @@ function validateConfig() {
             getDownloadsFolder() + "/Socket Files/"
         ).replace(/\\/g, "/");
         let defaultPort = 1407;
+        let defaultTheme = "light";
         if (!fs.existsSync(path.join(__dirname, "config.json"))) {
             config = { files: defaultFilesFolder, port: defaultPort };
             updateConfig(config);
@@ -72,12 +73,35 @@ function validateConfig() {
             if (!configHas(config, "port")) {
                 config.port = defaultPort;
             }
+            if(!configHas(config, "theme")) {
+                config.theme = defaultTheme;
+            }
             updateConfig(config);
         }
 
         if (!fs.existsSync(config.files)) {
             fs.mkdirSync(config.files);
         }
+
+        switch (config.theme) {
+            case "light": {
+                setLightTheme();
+                break;
+            }
+            case "dark": {
+                setDarkTheme();
+                break;
+            }
+            case "pink": {
+                setPinkTheme();
+                break;
+            }
+            default: {
+                setLightTheme();
+            }
+        }
+
+
         resolve();
     });
 }
