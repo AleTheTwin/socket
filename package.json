@@ -5,7 +5,7 @@
   "description": "Share files with devices from your local network",
   "main": "src/index.js",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "electron src/index.js",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
@@ -55,26 +55,18 @@
     "@dicebear/adventurer": "^4.10.1",
     "@dicebear/avatars": "^4.10.1",
     "axios": "^0.24.0",
-    "config": "^3.3.6",
     "electron-squirrel-startup": "^1.0.0",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "form-data": "^4.0.0",
-    "got": "^11.8.3",
     "jsonwebtoken": "^8.5.1",
-    "local-devices": "^3.2.0",
-    "multer": "^1.4.4",
+    "local-devices": "^3.0.0",
     "node-port-scanner": "^3.0.1",
     "platform-folders": "^0.5.4",
-    "uuid": "^8.3.2",
-    "ws": "^8.2.3"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.61",
-    "@electron-forge/maker-deb": "^6.0.0-beta.61",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.61",
-    "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
-    "@electron-forge/maker-zip": "^6.0.0-beta.61",
-    "electron": "^16.0.2"
+    "electron": "^16.0.2",
+    "electron-packager": "^15.4.0"
   }
 }
