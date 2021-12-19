@@ -66,7 +66,7 @@ function generateAvatar(name, size) {
     return createAvatar(style, {
         seed: name || "seed",
         size: size || 40,
-        backgroundColor: "#ABFD9E",
+        backgroundColor: "#00000000",
         radius: 50,
     });
 }

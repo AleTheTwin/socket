@@ -68,6 +68,9 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    /* background-image: url(https://res.cloudinary.com/practicaldev/image/fetch/s--RNNNA7AE--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://user-images.githubusercontent.com/69592270/101304060-72ff5b00-380d-11eb-8c58-a3172d791c9c.png); */
+    background-image: url(img/glass-dark-bg.png);
+    /* background-image: url(img/background-image.png); */
 }
 
 .general-shadow {
@@ -114,10 +117,13 @@ h1:hover ~ .gear {
 .option-bar {
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
-    background: #484b52;
     height: 25px;
     display: flex;
     align-items: center;
+}
+
+.option-bar-default-theme {
+    background: #484b52;
 }
 
 .option-bar svg {
@@ -162,7 +168,6 @@ h1:hover ~ .gear {
 
 .device-container {
     border-bottom-left-radius: 8px;
-    background: #36393f;
     flex-grow: 1;
     display: flex;
     flex-wrap: wrap;
@@ -171,14 +176,29 @@ h1:hover ~ .gear {
     overflow-x: hidden;
 }
 
+.main-color-default-theme {
+    background: #36393f;
+}
+
 .main-menu {
     border-bottom-right-radius: 8px;
     min-width: 250px;
     max-width: 400px;
-    background: #3c3f45;
     display: flex;
     flex-direction: column;
     max-height: calc(100vh - 25px);
+}
+
+.main-menu-default-theme {
+    background: #3c3f45;
+}
+
+.glass-theme {
+    background: rgba(0, 0, 0, 0.25);
+    /* box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 ); */
+    backdrop-filter: blur( 4.5px );
+    -webkit-backdrop-filter: blur( 4.5px );
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 .main-container {
@@ -187,7 +207,6 @@ h1:hover ~ .gear {
 }
 
 .device-info {
-    background: #b5b5b5;
     border-radius: 10px;
     display: flex;
     margin-left: 20px;
@@ -195,12 +214,16 @@ h1:hover ~ .gear {
     text-align: right;
 }
 
+.device-info-default-theme {
+    background: #b5b5b5;
+}
+
 .grow > .device-info {
     margin-top: 20px;
 }
 
 .info {
-    color: #3c3f45;
+    color: #cbcaca;
     font-size: 10px;
     flex-grow: 1;
     margin: 10px 0 10px 0;
@@ -218,7 +241,6 @@ h1:hover ~ .gear {
 .avatar {
     min-width: 40px;
     min-height: 40px;
-    background: #abfd9e;
     margin: auto 10px auto 10px;
     border-radius: 50%;
 }
@@ -251,7 +273,7 @@ h1:hover ~ .gear {
 }
 
 .device-card {
-    background: #3c3f45;
+    /* background: #3c3f45; */
     min-width: 220px;
     /* max-width: 50vw; */
     min-height: 220px;
@@ -263,7 +285,7 @@ h1:hover ~ .gear {
     margin-right: auto;
     display: flex;
     flex-direction: row;
-    transition: ease-in-out 0.7s;
+    transition: ease-in-out 0.3s;
 }
 
 .dragover-device-card {
@@ -321,7 +343,7 @@ h1:hover ~ .gear {
 
 .btn-settings {
     display: flex;
-    background: #36393f;
+    /* background: #36393f; */
     padding: 0 10px;
     margin-bottom: 10px;
     border-radius: 10px;
@@ -361,6 +383,7 @@ h1:hover ~ .gear {
 }
 
 .modal-shadow {
+    backdrop-filter: blur( 4.5px );
     position: fixed;
     background: #00000091;
     height: 100vh;
@@ -371,6 +394,7 @@ h1:hover ~ .gear {
 
 .modal-shadow * {
     opacity: 1;
+    backdrop-filter: blur( 0px );
 }
 
 .visually-hidden {
