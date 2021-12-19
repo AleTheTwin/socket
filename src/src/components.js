@@ -82,7 +82,7 @@ function FileReceivedMessage() {
     return '<p>File(s) recieved 📥</p>\
     <div>\
         <div class="device-info btn btn-send" onclick="openFilesFolder()">\
-            <div class="info info-card">\
+            <div class="info info-card glass-theme">\
                 <h1>Show in folder</h1>\
             </div>\
         </div>\
@@ -120,7 +120,7 @@ function FileSentConfirmMessage(files, socket) {
             <input class="visually-hidden" type="file" name="file" id="input-file" multiple>\
             <label class="visually-hidden" class="btn" for="input-file">Select file 📁</label>\
             </form>\
-            <div class="info info-card">\
+            <div class="info info-card glass-theme">\
                 <h1>Send</h1>\
             </div>\
         </div>\
