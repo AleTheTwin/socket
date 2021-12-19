@@ -56,8 +56,14 @@
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
   }
 
+  :root {
+      --theme:rgba(0, 0, 0, 0.25);
+      --background:url(img/dark-bg.png);
+      --color:#cbcaca;
+  }
+
 html {
-    color: rgb(206, 205, 205);
+    color: var(--color);
     border-radius: 10px;
     font-family: "Roboto Mono", monospace;
 }
@@ -68,9 +74,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    /* background-image: url(https://res.cloudinary.com/practicaldev/image/fetch/s--RNNNA7AE--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://user-images.githubusercontent.com/69592270/101304060-72ff5b00-380d-11eb-8c58-a3172d791c9c.png); */
-    background-image: url(img/glass-dark-bg.png);
-    /* background-image: url(img/background-image.png); */
+    background-image: var(--background);
 }
 
 .general-shadow {
@@ -194,7 +198,7 @@ h1:hover ~ .gear {
 }
 
 .glass-theme {
-    background: rgba(0, 0, 0, 0.25);
+    background: var(--theme);
     /* box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 ); */
     backdrop-filter: blur( 4.5px );
     -webkit-backdrop-filter: blur( 4.5px );
@@ -223,7 +227,7 @@ h1:hover ~ .gear {
 }
 
 .info {
-    color: #cbcaca;
+    color: var(--color);;
     font-size: 10px;
     flex-grow: 1;
     margin: 10px 0 10px 0;
@@ -312,7 +316,7 @@ h1:hover ~ .gear {
 }
 
 .color-glass-theme {
-    color: #cbcaca;
+    color: var(--color);;
 }
 
 /* * {
@@ -490,7 +494,7 @@ h1:hover ~ .gear {
 }
 
 a {
-    color: #abfd9e;
+    color: var(--color);;
 }
 
 /* width */

@@ -140,3 +140,38 @@ function sendFile(address, port) {
             console.log(result);
         });
 }
+
+function toggleDarkMode() {
+    let root = document.querySelector(':root')
+    let rootStyle = getComputedStyle(root).getPropertyValue('--theme')
+    console.log(rootStyle)
+    
+    let theme = (rootStyle == "rgba(0, 0, 0, 0.25)") ? "dark" : "light"
+
+    if (theme == "dark") {
+        root.style.setProperty('--theme', 'rgba(255,255,255,0.25)')
+    } else {
+        root.style.setProperty('--theme', 'rgba(0, 0, 0, 0.25)')
+    }
+}
+
+function setDarkTheme() {
+    let root = document.querySelector(':root')
+    root.style.setProperty('--theme', 'rgba(0, 0, 0, 0.25)')
+    root.style.setProperty('--background', 'url(img/dark-bg.png)')
+    root.style.setProperty('--color', '#cbcaca')
+}
+
+function setLightTheme() {
+    let root = document.querySelector(':root')
+    root.style.setProperty('--theme', 'rgba(255,255,255,0.25)')
+    root.style.setProperty('--background', 'url(img/light-bg.png)')
+    root.style.setProperty('--color', '#3c3f45')
+}
+
+function setPinkTheme() {
+    let root = document.querySelector(':root')
+    root.style.setProperty('--theme', 'rgba(255,255,255,0.25)')
+    root.style.setProperty('--background', 'url(img/pink-bg.png)')
+    root.style.setProperty('--color', '#3c3f45')
+}
