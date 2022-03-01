@@ -60,7 +60,7 @@ function validateConfig() {
         let defaultFilesFolder = (
             getDownloadsFolder() + "/Socket Files/"
         ).replace(/\\/g, "/");
-        let defaultPort = 1407;
+        let defaultPort = 4514;
         let defaultTheme = "dark";
         if (!fs.existsSync(path.join(__dirname, "config.json"))) {
             config = { files: defaultFilesFolder, port: defaultPort };
