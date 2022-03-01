@@ -61,7 +61,7 @@ function validateConfig() {
             getDownloadsFolder() + "/Socket Files/"
         ).replace(/\\/g, "/");
         let defaultPort = 1407;
-        let defaultTheme = "light";
+        let defaultTheme = "dark";
         if (!fs.existsSync(path.join(__dirname, "config.json"))) {
             config = { files: defaultFilesFolder, port: defaultPort };
             updateConfig(config);
@@ -182,7 +182,7 @@ function toggleDarkMode() {
 function setDarkTheme() {
     let root = document.querySelector(':root')
     root.style.setProperty('--theme', 'rgba(0, 0, 0, 0.25)')
-    root.style.setProperty('--background', 'url(img/dark-bg.png)')
+    // root.style.setProperty('--background', 'url(img/dark-bg.png)')
     root.style.setProperty('--color', '#cbcaca')
 }
 

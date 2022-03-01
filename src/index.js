@@ -12,18 +12,20 @@ var frame;
 
 async function createViewport() {
     frame = new BrowserWindow({
-        transparent: true, 
+        transparent: false, 
         width: 900,
         height: 620,
-        fullscreenable: false,
+        minWidth: 900,
+        minHeight: 620,
+        fullscreenable: true,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
         },
         show: false,
         frame: false,
-        maximizable: false,
-        resizable: false,
+        maximizable: true,
+        resizable: true,
         icon: path.join(__dirname, "icons/icon.ico"),
     });
     frame.loadFile(path.join(__dirname, "index.html"));
