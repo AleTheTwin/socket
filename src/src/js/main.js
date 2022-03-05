@@ -1,4 +1,4 @@
-const Socket = require("./socket");
+const Socket = require("./src/js/socket");
 const { shell } = require("electron");
 const ipcRenderer = require("electron").ipcRenderer;
 const fs = require("fs");
@@ -24,6 +24,10 @@ async function main() {
         let card = SocketCard(socket);
         await render(card, "device-container", false, socket);
         setDragOverListeners(socket)
+    });
+
+    socketServer.on("error",async (message) => {
+        console.log(message);
     });
 
     socketServer.on("disconnection", (disconnectedSocket) => {

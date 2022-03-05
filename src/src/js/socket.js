@@ -90,7 +90,7 @@ class Socket extends EventEmitter {
         this.app.use(express.json());
         this.app.use(fileUpload({
             useTempFiles : true,
-            tempFileDir : path.join(__dirname, "temp/")
+            tempFileDir : "./temp/"
         }))
         try {
             if (!fs.existsSync("./secret.key")) {
