@@ -1,6 +1,6 @@
 {
   "name": "socket",
-  "productName": "socket",
+  "productName": "Socket",
   "version": "1.0.0",
   "description": "Share files with devices from your local network",
   "main": "src/index.js",
